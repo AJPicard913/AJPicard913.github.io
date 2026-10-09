@@ -1,6 +1,6 @@
 # AJ Picard portfolio
 
-Public portfolio at https://ajpicard913.github.io.
+Public portfolio at https://ajpicard.design.
 
 The site is static HTML, CSS, and JavaScript. GitHub Pages publishes the root of the `main` branch.
 
