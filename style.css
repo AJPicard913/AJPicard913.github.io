@@ -29,3 +29,12 @@
 @media(min-width:761px) and (max-width:1100px){.keyboard-art{padding:35px 24px}.keyboard-previews{gap:18px}.keyboard-heading>p{font-size:30px}.keyboard-preview figcaption{font-size:12px}}
 @media(max-width:760px){.feature-art.keyboard-art{padding:35px 32px 40px}.keyboard-previews{grid-template-columns:minmax(0,280px);max-width:280px;gap:36px}.keyboard-preview,.keyboard-preview:nth-child(2){width:100%;max-width:280px;margin:0;transform:none}.keyboard-heading>p{font-size:32px;margin-bottom:28px}.keyboard-preview figcaption{font-size:14px;margin-top:16px}.keyboard-window,.clipboard-preview .keyboard-window{border-radius:0}}
 @media(max-width:370px){.feature-art.keyboard-art{padding-left:28px;padding-right:28px}.keyboard-heading>p{font-size:28px}}
+
+/* Clear cross-platform introduction and current employment status. */
+.hero-copy>p{flex:1;min-width:0;max-width:26ch;font-weight:500}
+.hero-detail{flex:0 0 30%;width:auto}
+.timeline-row .date-current{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.current-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid #cad9b7;border-radius:999px;background:#edf3e5;color:#3d5d27;font-size:11px;font-weight:600;letter-spacing:.01em;line-height:1}
+.current-tag>span{width:6px;height:6px;flex:none;border-radius:50%;background:#5c8639}
+@media(max-width:1100px){.hero-detail{flex-basis:34%}}
+@media(max-width:760px){.hero-copy>p{max-width:100%}.hero-detail{width:auto}}
