@@ -91,7 +91,7 @@
   .hero-links{gap:10px 22px}
   .work-heading>p{font-size:16px;max-width:39ch}
   .work .results{padding:26px 0 30px;margin-bottom:30px}
-  .work .results>div:last-child strong{font-size:clamp(22px,6.5vw,34px);white-space:nowrap}
+  .work .results>div:last-child strong{white-space:nowrap}
   .project-id>span{font-size:13px}
   .case-studies{padding-top:65px}
   .case-studies-heading{display:block;margin-bottom:30px}
@@ -173,3 +173,42 @@
  .study-modal-content h3~p{font-size:16px}
 }
 @media(max-width:370px){.study-cover{margin-left:-23px;margin-right:-23px;margin-top:-23px}.study-modal-content{padding-left:22px;padding-right:22px}.study-modal-content h2{font-size:28px}.study-open{font-size:12px}.study-modal-result>strong{font-size:31px}}
+
+/* A direct introduction with room for the app icons and scroll cue. */
+.hero-copy{display:block}
+.hero-copy>p{max-width:28ch}
+.hero-copy .hero-links{margin-top:24px}
+.hero-sticky,.motion-off .hero-sticky{min-height:clamp(840px,calc(20vw + 620px),1040px)}
+.hero-floor{justify-content:center;padding:24px 0 48px}
+.hero-floor .scroll-cue:first-child{display:flex}
+.app-orbit{bottom:170px}
+.work-heading{margin-bottom:38px}
+.study-grid{align-items:stretch}
+.study-card{display:flex;flex-direction:column}
+.study-cover{flex-shrink:0}
+.study-description{color:#61596f}
+.study-search .study-description{color:#536b5b}
+.study-open{margin-top:auto}
+@media(min-width:761px){.study-description{min-height:0}}
+@media(min-width:761px) and (max-height:900px){
+ .hero-sticky,.motion-off .hero-sticky{min-height:760px;padding-top:110px}
+ .hero h1{font-size:clamp(80px,10vw,170px);margin:20px 0 25px}
+ .hero-copy>p{font-size:32px}
+ .hero-copy .hero-links{margin-top:20px}
+}
+@media(min-width:761px) and (max-height:759px){
+ .hero,.motion-off .hero{height:auto}
+ .hero-sticky,.motion-off .hero-sticky{position:relative;height:760px}
+ .hero-next{display:none}
+ .hero-intro{opacity:1!important;transform:none!important}
+ .app-orbit{transform:translateX(-50%)!important}
+}
+@media(max-width:760px){
+ .hero-sticky,.motion-off .hero-sticky{min-height:760px}
+ .hero-copy .hero-links{margin-top:22px}
+ .hero-floor{padding:22px 0 44px}
+ .hero-floor .scroll-cue:first-child{display:flex}
+ .app-orbit{bottom:165px}
+ .work-heading{margin-bottom:30px}
+ .feature-copy h3{font-size:clamp(32px,8.5vw,46px)}
+}

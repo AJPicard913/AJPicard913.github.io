@@ -7,19 +7,18 @@ const next = $('.hero-next');
 const orbit = $('.app-orbit');
 const icons = [...document.querySelectorAll('.orbit-app')];
 const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-const toggle = $('#motion-toggle');
 let motionOff = reduce.matches, raf = 0;
 const clamp = (v,min=0,max=1)=>Math.min(max,Math.max(min,v));
 const ease = t=>t*t*(3-2*t);
 const observer = new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}}),{threshold:.08});
 document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 document.body.classList.add('motion-ready');
-function setMotion(off){motionOff=off;document.body.classList.toggle('motion-off',off);toggle.textContent=off?'Motion off':'Motion on';toggle.setAttribute('aria-pressed',String(off));toggle.setAttribute('aria-label',off?'Enable scroll animations':'Disable scroll animations');requestFrame();}
+function setMotion(off){motionOff=off;document.body.classList.toggle('motion-off',off);requestFrame();}
 function render(){
  raf=0;
  const total=document.documentElement.scrollHeight-innerHeight;
  $('.reading-progress').style.transform=`scaleX(${total>0?clamp(scrollY/total):0})`;
- const staticHero = motionOff || (innerWidth<=760 && innerHeight<=700);
+ const staticHero = motionOff || (innerWidth<=760 ? innerHeight<=700 : innerHeight<=759);
  const p=staticHero?0:clamp(-hero.getBoundingClientRect().top/Math.max(1,hero.offsetHeight-stage.offsetHeight));
  const fade=1-ease(clamp(p/.42));
  intro.style.opacity=fade;
@@ -39,7 +38,6 @@ function requestFrame(){if(!raf)raf=requestAnimationFrame(render);}
 addEventListener('scroll',requestFrame,{passive:true});
 addEventListener('resize',requestFrame,{passive:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestFrame();});
-toggle.addEventListener('click',()=>setMotion(!motionOff));
 reduce.addEventListener('change',e=>setMotion(e.matches));
 setMotion(motionOff);
 
