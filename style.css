@@ -125,9 +125,8 @@
 /* Branded case study covers and native, keyboard-accessible reading dialogs. */
 .study-card{cursor:pointer;transition:box-shadow .25s}
 .study-card:hover{box-shadow:0 14px 35px -22px #22284050}
-.study-cover{aspect-ratio:3/2;margin:-36px -36px 28px;overflow:hidden;border-radius:22px 22px 0 0;background:#e6e6f5}
-.study-cover>img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
-.study-card:hover .study-cover>img{transform:scale(1.025)}
+.study-cover{aspect-ratio:3/2;margin:-16px -16px 28px;overflow:hidden;border-radius:14px;background:#e6e6f5}
+.study-cover>img{display:block;width:100%;height:100%;object-fit:contain}
 .study-card .study-category{margin-bottom:22px}
 .study-open{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;border:0;border-top:1px solid #302c4026;background:transparent;color:inherit;padding:20px 0 0;min-height:62px;text-align:left;font-size:14px;font-weight:500;cursor:pointer}
 .study-open-arrow{display:grid;place-items:center;width:32px;height:32px;flex-shrink:0;border:1px solid #302c4045;border-radius:50%;font-size:20px;line-height:1;transition:transform .25s,background .25s}
@@ -158,9 +157,9 @@
 .study-modal-content>p:last-child{margin-bottom:0}
 @keyframes study-enter{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .motion-off .study-modal,.motion-off .study-cover>img{animation:none;transition:none}
-@media(min-width:761px) and (max-width:1000px){.study-cover{margin:-27px -27px 27px}.study-open{font-size:13px;gap:12px}}
+@media(min-width:761px) and (max-width:1000px){.study-cover{margin:-12px -12px 27px}.study-open{font-size:13px;gap:12px}}
 @media(max-width:760px){
- .study-cover{margin:-27px -27px 24px;border-radius:18px 18px 0 0}
+ .study-cover{margin:-12px -12px 24px;border-radius:12px}
  .study-open{font-size:13px;gap:12px}
  .study-modal{width:calc(100% - 20px);max-height:calc(100svh - 20px);border-radius:18px}
  .study-modal-toolbar{padding:12px 16px;gap:12px}
@@ -175,7 +174,7 @@
  .study-modal-content h3{font-size:23px}
  .study-modal-content h3~p{font-size:16px}
 }
-@media(max-width:370px){.study-cover{margin-left:-23px;margin-right:-23px;margin-top:-23px}.study-modal-content{padding-left:22px;padding-right:22px}.study-modal-content h2{font-size:28px}.study-open{font-size:12px}.study-modal-result>strong{font-size:31px}}
+@media(max-width:370px){.study-cover{margin-left:-11px;margin-right:-11px;margin-top:-11px}.study-modal-content{padding-left:22px;padding-right:22px}.study-modal-content h2{font-size:28px}.study-open{font-size:12px}.study-modal-result>strong{font-size:31px}}
 
 /* A direct introduction with room for the app icons and scroll cue. */
 .hero-copy{display:block}
