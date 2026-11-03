@@ -51,7 +51,7 @@
 .work-heading>p{max-width:430px;font-size:17px}
 .work .results{margin:0 0 44px;padding:28px 0 35px;border-top:1px solid var(--line)}
 .project-id>span{font-size:14px;letter-spacing:0;font-weight:500}
-.case-studies{padding-top:100px;scroll-margin-top:35px}
+.case-studies{padding:20px 0 80px;scroll-margin-top:35px}
 .case-studies-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:38px}
 .case-studies-heading h3{font:600 clamp(36px,4.6vw,68px)/1.1 'Manrope',sans-serif;letter-spacing:-.045em;margin:20px 0 0}
 .case-studies-heading>p{max-width:360px;color:#62685c;font-size:16px;line-height:1.65;margin:0 0 5px}
@@ -96,7 +96,7 @@
   .work .results{padding:26px 0 30px;margin-bottom:30px}
   .work .results>div:last-child strong{white-space:nowrap}
   .project-id>span{font-size:13px}
-  .case-studies{padding-top:65px}
+  .case-studies{padding:20px 0 60px}
   .case-studies-heading{display:block;margin-bottom:30px}
   .case-studies-heading h3{font-size:40px;margin:17px 0 23px}
   .case-studies-heading>p{font-size:15px}
