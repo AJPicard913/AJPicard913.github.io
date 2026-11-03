@@ -38,3 +38,83 @@
 .current-tag>span{width:6px;height:6px;flex:none;border-radius:50%;background:#5c8639}
 @media(max-width:1100px){.hero-detail{flex-basis:34%}}
 @media(max-width:760px){.hero-copy>p{max-width:100%}.hero-detail{width:auto}}
+
+/* OneTap results and two perspectives on building an independent product. */
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+.hero-links{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center}
+.hero-links .text-link{min-height:32px}
+.work{border-top:1px solid var(--line)}
+.work-heading{gap:40px;margin-bottom:32px}
+.work-heading>p{max-width:430px;font-size:17px}
+.work .results{margin:0 0 44px;padding:28px 0 35px;border-top:1px solid var(--line)}
+.project-id>span{font-size:14px;letter-spacing:0;font-weight:500}
+.case-studies{padding-top:100px;scroll-margin-top:35px}
+.case-studies-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:38px}
+.case-studies-heading h3{font:600 clamp(36px,4.6vw,68px)/1.1 'Manrope',sans-serif;letter-spacing:-.045em;margin:20px 0 0}
+.case-studies-heading>p{max-width:360px;color:#62685c;font-size:16px;line-height:1.65;margin:0 0 5px}
+.study-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.study-card{min-width:0;padding:36px;border-radius:22px;background:#e8e4f2;color:#302c40}
+.study-search{background:#e0ebdf;color:#243b2e}
+.study-category{display:flex;justify-content:space-between;gap:16px;font-size:11px;letter-spacing:.065em;font-weight:600}
+.study-category>span:last-child{opacity:.65}
+.study-result{padding:48px 0 36px;margin-bottom:29px;border-bottom:1px solid #302c4026}
+.study-result-label{font-size:11px;font-weight:500;letter-spacing:.045em}
+.study-result>p{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 13px;font:500 clamp(36px,5.5vw,86px)/1.1 'Manrope',sans-serif;letter-spacing:-.06em}
+.study-result strong{font-weight:600}
+.study-result>p>span:first-child{color:#686078}
+.study-result .study-result-arrow{font-size:.6em;letter-spacing:0;color:#8575a3}
+.study-result .study-search-star{font-family:Arial,sans-serif;font-size:.85em;letter-spacing:0;color:#668653}
+.study-result-caption{display:block;font-size:13px;line-height:1.5}
+.study-card h4{font:600 clamp(25px,2.8vw,41px)/1.15 'Manrope',sans-serif;letter-spacing:-.035em;margin:0 0 19px}
+.study-description{font-size:16px;line-height:1.7;margin:0 0 30px;max-width:47ch}
+.study-details{border-top:1px solid #302c4026}
+.study-details summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:20px;cursor:pointer;min-height:62px;padding:19px 0 0;font-size:14px;font-weight:500}
+.study-details summary::marker{content:''}
+.study-toggle{display:grid;place-items:center;flex:0 0 29px;width:29px;height:29px;border:1px solid #302c4045;border-radius:50%;font-size:21px;line-height:1;transition:transform .25s}
+.study-details[open] .study-toggle{transform:rotate(45deg)}
+.study-details summary:hover .study-toggle{background:#ffffff50}
+.study-overview{padding-top:28px}
+.study-overview .eyebrow{font-size:11px}
+.study-overview p{font-size:15px;line-height:1.75;margin:17px 0}
+.study-overview .text-link{line-height:1.6;margin-top:5px}
+.more-studies{display:flex;align-items:center;justify-content:space-between;gap:40px;margin-top:24px;padding:38px 40px;border-radius:22px;background:#20231e;color:var(--paper);transition:background .25s}
+.more-studies:hover{background:#2b3027}
+.more-studies .eyebrow{color:#ccee94;font-size:11px;letter-spacing:.06em}
+.more-studies h4{font:500 clamp(24px,2.6vw,36px)/1.2 'Manrope',sans-serif;letter-spacing:-.035em;margin:14px 0}
+.more-studies p{font-size:15px;line-height:1.7;color:#b4bbac;margin:0}
+.more-studies-link{display:flex;align-items:center;gap:25px;flex-shrink:0;font-size:14px;border-bottom:1px solid #8d9980;padding:10px 0}
+.more-studies-link>span{font-size:24px;color:#ccee94;transition:transform .25s}
+.more-studies:hover .more-studies-link>span{transform:translate(3px,-3px)}
+@media(min-width:761px){.study-description{min-height:5.1em}}
+@media(min-width:761px) and (max-width:1000px){.study-card{padding:27px}.case-studies-heading>p{max-width:280px}.more-studies{padding:32px}}
+@media(max-width:760px){
+  .hero-links{gap:10px 22px}
+  .work-heading>p{font-size:16px;max-width:39ch}
+  .work .results{padding:26px 0 30px;margin-bottom:30px}
+  .work .results>div:last-child strong{font-size:clamp(22px,6.5vw,34px);white-space:nowrap}
+  .project-id>span{font-size:13px}
+  .case-studies{padding-top:65px}
+  .case-studies-heading{display:block;margin-bottom:30px}
+  .case-studies-heading h3{font-size:40px;margin:17px 0 23px}
+  .case-studies-heading>p{font-size:15px}
+  .study-grid{grid-template-columns:1fr;gap:20px}
+  .study-card{padding:27px;border-radius:18px}
+  .study-result{padding:35px 0 29px;margin-bottom:26px}
+  .study-result>p{font-size:clamp(42px,12vw,74px)}
+  .study-card h4{font-size:30px}
+  .study-description{font-size:15px;margin-bottom:24px}
+  .study-details summary{font-size:13px;gap:10px;min-height:64px}
+  .more-studies{display:block;padding:30px 27px;margin-top:20px;border-radius:18px}
+  .more-studies h4{font-size:27px}
+  .more-studies-link{display:inline-flex;margin-top:23px;gap:30px}
+}
+@media(max-width:370px){
+  .study-card{padding:23px}
+  .study-category,.study-result-label{font-size:10px}
+  .study-card h4{font-size:27px}
+  .study-result>p{font-size:40px}
+  .project-id{gap:10px}
+  .project-id img{width:44px;height:44px}
+  .project-id>span{font-size:12px}
+  .work .results strong{font-size:30px}
+}
