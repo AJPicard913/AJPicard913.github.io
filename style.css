@@ -366,3 +366,18 @@
  .header nav{gap:17px}
 }
 @media(max-width:370px){.header nav{gap:11px;font-size:12px}.header .contact-pill{padding:9px 10px}.usage-milestones strong{font-size:23px}.usage-milestones>div{padding:15px 8px}.pricing-art{min-height:0}}
+
+/* Verified keyboard usage evidence. */
+.usage-evidence{margin:32px 0;background:#e8e4f2;border:1px solid #d8d0e8;border-radius:18px;padding:29px;color:#302b40}
+.usage-evidence-heading{display:flex;justify-content:space-between;gap:20px;font-size:9px;line-height:1.65;letter-spacing:.08em;color:#766c88}
+.usage-evidence-heading>span:last-child{text-align:right}
+.usage-evidence-total{display:flex;flex-direction:column;gap:7px;margin:27px 0 30px}
+.usage-evidence-total>strong{font:550 clamp(42px,7vw,76px)/1.05 'Manrope',sans-serif;letter-spacing:-.055em}
+.usage-evidence-total>span{font-size:18px;color:#665b79}
+.usage-evidence-people{display:grid;grid-template-columns:1fr 1fr;gap:24px;border-top:1px solid #d3cbe1;padding-top:23px}
+.usage-evidence-people>div{display:flex;flex-direction:column;gap:7px}
+.usage-evidence-people strong{font:550 31px/1.2 'Manrope',sans-serif;letter-spacing:-.04em}
+.usage-evidence-people span{font-size:12px;line-height:1.5;color:#6b607e}
+.usage-evidence>p{font-size:11px;line-height:1.7;color:#766c88;margin:24px 0 0}
+.usage-growth figcaption a{display:inline;border-bottom:1px solid currentColor;margin-left:4px;white-space:normal}
+@media(max-width:760px){.usage-evidence{padding:24px 20px}.usage-evidence-heading{flex-direction:column;gap:4px;font-size:9px}.usage-evidence-heading>span:last-child{text-align:left}.usage-evidence-total{margin-top:23px}.usage-evidence-total>span{font-size:16px}.usage-evidence-people{gap:16px}.usage-evidence-people strong{font-size:28px}}
