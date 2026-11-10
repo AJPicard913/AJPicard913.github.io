@@ -10,12 +10,58 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)');
 let motionOff = reduce.matches, raf = 0;
 const clamp = (v,min=0,max=1)=>Math.min(max,Math.max(min,v));
 const ease = t=>t*t*(3-2*t);
-const observer = new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-visible');observer.unobserve(entry.target);}}),{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+// Enhance only successfully initialized targets; the document is readable without JS.
+document.querySelectorAll('.section-label, .results > div, .experience-heading h2, .skill-heading, .toolbox, .education, .also-built, .contact-title, .contact-bottom > *, .keyboard-heading, .keyboard-preview, footer > *').forEach(el=>el.classList.add('reveal'));
+$('.results')?.classList.remove('reveal');
+const reveals = [...document.querySelectorAll('.reveal')].filter(el=>!el.parentElement.closest('.reveal'));
+let revealObserver = null;
+function showReveal(el){
+ el.classList.add('is-visible');
+ el.classList.remove('reveal-pending');
+ revealObserver?.unobserve(el);
+}
+function finishReveals(){
+ reveals.forEach(showReveal);
+ revealObserver?.disconnect();
+ document.body.classList.remove('hero-entering');
+}
+function staggerRows(){
+ document.querySelectorAll('.results, .study-grid, .web-grid, .skills-grid, .app-grid, .keyboard-previews').forEach(group=>{
+  let rowTop = null, column = 0;
+  [...group.children].forEach(el=>{
+   const top = el.getBoundingClientRect().top;
+   if(rowTop===null || Math.abs(top-rowTop)>12){rowTop=top;column=0;}
+   el.style.setProperty('--reveal-delay',`${Math.min(column++*85,255)}ms`);
+  });
+ });
+}
+if(!motionOff && 'IntersectionObserver' in window){
+ staggerRows();
+ revealObserver = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting)showReveal(entry.target);});
+ },{threshold:.08,rootMargin:'0px 0px -32px 0px'});
+ reveals.forEach(el=>{
+  if(el.getBoundingClientRect().bottom<=0)showReveal(el);
+  else {el.classList.add('reveal-pending');revealObserver.observe(el);}
+ });
+}
 document.body.classList.add('motion-ready');
-function setMotion(off){motionOff=off;document.body.classList.toggle('motion-off',off);requestFrame();}
+if(!motionOff && scrollY<24 && (!location.hash || location.hash==='#top')){
+ document.body.classList.add('hero-entering');
+ icons.at(-1)?.querySelector('img')?.addEventListener('animationend',event=>{
+  if(event.animationName==='hero-icon-rise')document.body.classList.remove('hero-entering');
+ });
+}
+document.addEventListener('focusin',event=>{
+ if(!(event.target instanceof Element))return;
+ const target=event.target.closest('.reveal-pending');
+ if(target){target.style.setProperty('--reveal-delay','0ms');showReveal(target);}
+ if(event.target.closest('.hero, .header'))document.body.classList.remove('hero-entering');
+});
+function setMotion(off){motionOff=off;document.body.classList.toggle('motion-off',off);if(off)finishReveals();requestFrame();}
 function render(){
  raf=0;
+ if(scrollY>24)document.body.classList.remove('hero-entering');
  const total=document.documentElement.scrollHeight-innerHeight;
  $('.reading-progress').style.transform=`scaleX(${total>0?clamp(scrollY/total):0})`;
  const staticHero = motionOff || (innerWidth<=760 ? innerHeight<=700 : innerHeight<=759);
