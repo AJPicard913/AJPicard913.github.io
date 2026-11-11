@@ -2,7 +2,7 @@
 
 Public portfolio at https://ajpicard.design.
 
-The site is static HTML, CSS, and JavaScript. GitHub Pages publishes the root of the `main` branch.
+The site is static HTML, CSS, and JavaScript. The `Publish portfolio` GitHub Actions workflow publishes the root of the `main` branch to GitHub Pages.
 
 - `index.html`: content and app links
 - `style.css`: responsive presentation
