@@ -75,8 +75,11 @@ function render(){
  next.style.transform=`translateY(${(1-text)*35}px)`;
  const mobile=innerWidth<=760;
  const up=ease(clamp(p/.8));
- const maxScale = mobile ? Math.max(1, (stage.clientWidth - 42) / orbit.offsetWidth) : 1.64;
- const scale = 1 + up * Math.min(mobile ? .25 : .64, maxScale - 1);
+ // Reserve room for the outer icons' rotation and sideways travel on tablets too.
+ const spread = mobile ? 0 : up * 44;
+ const available = stage.clientWidth - (mobile ? 32 : 64) - 24;
+ const maxScale = Math.max(1, available / (orbit.offsetWidth + spread));
+ const scale = Math.min(1 + up * (mobile ? .25 : .64), maxScale);
  orbit.style.transform=`translateX(-50%) translateY(${-up*(mobile?70:75)}px) scale(${scale})`;
  icons.forEach((el,i)=>{const n=i-2;const rot=parseFloat(el.style.getPropertyValue('--r'));el.style.transform=`translateX(${n*up*(mobile?0:11)}px) translateY(${Math.abs(n)*up*(mobile?12:22)}px) rotate(${rot*(1-up*.7)}deg)`;});
 }
@@ -154,9 +157,8 @@ setMotion(motionOff);
  document.querySelectorAll('dialog.study-modal').forEach(dialog => {
   let pressedBackdrop = false;
   const outsidePanel = event => {
-   const panel = dialog.querySelector('.study-modal-panel');
-   if (!panel || event.target !== dialog) return false;
-   const rect = panel.getBoundingClientRect();
+   if (event.target !== dialog) return false;
+   const rect = dialog.getBoundingClientRect();
    return event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom;
   };
   dialog.addEventListener('pointerdown', event => { pressedBackdrop = outsidePanel(event); });
@@ -178,4 +180,23 @@ setMotion(motionOff);
   });
   dialog.addEventListener('close', () => restoreStudy(dialog));
  });
+})();
+
+// The reward is fulfilled personally by email; no codes or form data are sent here.
+(() => {
+ const sheet = $('#surprise-sheet');
+ if (!sheet) return;
+ function updatePrize(){
+  const selected = sheet.querySelector('input[name="prize-app"]:checked');
+  if (!selected) return;
+  $('#prize-selected-name').textContent = selected.value;
+  $('#prize-app-link').href = selected.dataset.appUrl;
+  $('#prize-app-link').setAttribute('aria-label', `View ${selected.value} on the App Store (opens in a new tab)`);
+  const message = `Hi AJ,\n\nI found the hidden surprise on ajpicard.design!\n\nI would love a free lifetime code for ${selected.value}.\nApp: ${selected.dataset.appUrl}\n\nThank you!`;
+  $('#prize-claim').href = `mailto:ajpicard25@icloud.com?subject=${encodeURIComponent('prize winner')}&body=${encodeURIComponent(message)}`;
+ }
+ sheet.addEventListener('change', event => {
+  if (event.target.matches('input[name="prize-app"]')) updatePrize();
+ });
+ updatePrize();
 })();
