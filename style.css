@@ -445,16 +445,43 @@
  .usage-comparison>div{grid-template-columns:46px minmax(0,1fr) 40px;gap:10px}
 }
 
-/* A small reward for curious visitors, tucked into the app orbit. */
-.orbit-surprise{position:absolute;left:calc(50% + 30px);top:-43px;z-index:5;width:44px;height:44px;display:grid;place-items:center;padding:0;border:0;background:transparent;color:#27301b;cursor:pointer;transform:rotate(12deg);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.orbit-surprise .surprise-tile{position:relative;display:grid;place-items:center;width:36px;height:36px;border:1px solid #99b94c;border-radius:11px;background:linear-gradient(145deg,#edffc1,#c5eb61);box-shadow:0 5px 12px #2233151c;font:500 25px/1 'DM Sans',sans-serif;overflow:hidden}
+/* A small reward that moves from the hero to the app shelf. */
+.surprise-trigger{position:relative;z-index:5;width:44px;height:44px;display:grid;place-items:center;padding:0;border:0;background:transparent;color:#27301b;cursor:pointer;transform:rotate(12deg);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.surprise-trigger[hidden]{display:none}
+.orbit-surprise{position:absolute;left:calc(50% + 30px);top:-43px}
+.surprise-trigger .surprise-tile{position:relative;display:grid;place-items:center;width:36px;height:36px;border:1px solid #99b94c;border-radius:11px;background:linear-gradient(145deg,#edffc1,#c5eb61);box-shadow:0 5px 12px #2233151c;font:500 25px/1 'DM Sans',sans-serif;overflow:hidden}
 .surprise-tile:after{content:'';position:absolute;inset:-40%;background:linear-gradient(110deg,transparent 38%,#fff9 50%,transparent 62%);transform:translateX(-120%);animation:surprise-shimmer 6s ease-in-out 2s infinite}
-.orbit-surprise:hover,.orbit-surprise:focus-visible{transform:rotate(0) translateY(-3px)}
-.app-orbit .surprise-hint{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) rotate(-12deg);padding:8px 12px;border-radius:20px;background:#20231e;color:#f6f7f5;font-size:11px;line-height:1.3;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
-.orbit-surprise:hover .surprise-hint,.orbit-surprise:focus-visible .surprise-hint{opacity:1}
+.surprise-trigger:hover,.surprise-trigger:focus-visible{transform:rotate(0) translateY(-3px)}
+.surprise-hint{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) rotate(-12deg);padding:8px 12px;border-radius:20px;background:#20231e;color:#f6f7f5;font-size:11px;line-height:1.3;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.surprise-trigger:hover .surprise-hint,.surprise-trigger:focus-visible .surprise-hint{opacity:1}
 .hero-entering .orbit-surprise{animation:surprise-appear .6s cubic-bezier(.16,1,.3,1) .8s both}
 @keyframes surprise-appear{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
 @keyframes surprise-shimmer{0%,72%{transform:translateX(-120%)}91%,100%{transform:translateX(120%)}}
+.shelf-heading{position:relative;margin-bottom:65px}
+.shelf-heading h2{margin-bottom:0}
+.shelf-surprise{position:absolute;left:min(520px,calc(100% - 44px));bottom:4px}
+.shelf-surprise .surprise-hint{left:auto;right:-6px;transform:rotate(-12deg)}
+.surprise-leaving{pointer-events:none}
+.surprise-leaving .surprise-tile{animation:surprise-poof .6s ease-out both}
+.surprise-leaving .surprise-hint{display:none}
+.surprise-leaving::before,.surprise-leaving::after{content:'';position:absolute;top:50%;left:50%;width:7px;height:7px;margin:-3.5px;border-radius:50%;background:#c5df98;box-shadow:-19px -15px 0 #a7bd84,20px -12px 0 #e0ebcd,-14px 19px 0 #e0ebcd,18px 18px 0 #a7bd84;pointer-events:none;animation:surprise-puff .6s ease-out both}
+.surprise-leaving::after{rotate:45deg;width:4px;height:4px;margin:-2px;animation-delay:.06s}
+.surprise-arriving .surprise-tile{animation:surprise-return .65s cubic-bezier(.16,1,.3,1) both}
+@keyframes surprise-poof{0%{opacity:1;transform:scale(1)}25%{opacity:1;transform:scale(1.14) rotate(-8deg)}100%{opacity:0;transform:scale(.15) rotate(28deg);filter:blur(5px)}}
+@keyframes surprise-puff{0%,15%{opacity:0;transform:scale(.2)}35%{opacity:.9}100%{opacity:0;transform:scale(1.6);filter:blur(2px)}}
+@keyframes surprise-return{0%{opacity:0;transform:translateY(12px) scale(.5) rotate(-30deg)}70%{opacity:1;transform:translateY(-3px) scale(1.1) rotate(5deg)}100%{opacity:1;transform:none}}
+@media(max-width:760px){
+ .shelf-heading{margin-bottom:40px}
+ .shelf-surprise{left:auto;right:0;bottom:2px}
+}
+@media(max-width:370px){.shelf-heading h2{font-size:40px}}
+@media(prefers-reduced-motion:reduce){
+ .surprise-leaving .surprise-tile,.surprise-leaving::before,.surprise-leaving::after,.surprise-arriving .surprise-tile{animation:none!important}
+ .surprise-leaving::before,.surprise-leaving::after{display:none}
+}
+.motion-off .surprise-leaving .surprise-tile,.motion-off .surprise-leaving::before,.motion-off .surprise-leaving::after,.motion-off .surprise-arriving .surprise-tile{animation:none!important}
+.motion-off .surprise-leaving::before,.motion-off .surprise-leaving::after{display:none}
+
 .surprise-sheet{scroll-padding-block:90px 140px;width:min(680px,calc(100% - 40px));border-radius:26px;max-height:calc(100svh - 40px);background:#f8faf4}
 .surprise-sheet[open]{animation:surprise-sheet-enter .4s cubic-bezier(.16,1,.3,1)}
 .prize-toolbar{background:#f8faf4f5;padding:15px 24px;backdrop-filter:blur(10px)}
@@ -499,7 +526,7 @@
 .study-close{min-height:44px}
 @media(max-width:760px){
  .orbit-surprise{left:calc(50% + 20px);top:-39px}
- .orbit-surprise .surprise-tile{width:32px;height:32px;border-radius:10px;font-size:23px}
+ .surprise-trigger .surprise-tile{width:32px;height:32px;border-radius:10px;font-size:23px}
  .surprise-sheet{position:fixed;inset:0;width:100%;max-height:calc(100svh - 20px);margin:auto auto 0;border-radius:26px 26px 0 0}
  .surprise-sheet[open]{animation:surprise-sheet-enter .4s cubic-bezier(.16,1,.3,1)}
  .prize-toolbar{padding:13px 20px}
@@ -529,7 +556,7 @@
 }
 @media(prefers-reduced-motion:reduce){
  .surprise-sheet[open],.surprise-sheet[open] .prize-medallion,.surprise-sheet[open] .prize-confetti i,.surprise-tile:after,.hero-entering .orbit-surprise{animation:none!important}
- .orbit-surprise,.prize-option,.prize-claim{transition:none}
+ .surprise-trigger,.prize-option,.prize-claim{transition:none}
  .hero-entering .orbit-surprise{opacity:1;translate:none}
 }
 .motion-off .surprise-sheet,.motion-off .prize-medallion,.motion-off .prize-confetti i,.motion-off .surprise-tile:after{animation:none!important}

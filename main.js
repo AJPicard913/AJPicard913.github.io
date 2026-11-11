@@ -200,3 +200,104 @@ setMotion(motionOff);
  });
  updatePrize();
 })();
+
+// The hidden reward moves from the hero to the app shelf after five visible seconds.
+(() => {
+ const heroSurprise = $('.orbit-surprise');
+ const shelfSurprise = $('.shelf-surprise');
+ const shelfHeading = $('.shelf-heading');
+ const sheet = $('#surprise-sheet');
+ if (!heroSurprise || !shelfSurprise || !shelfHeading || !sheet) return;
+ let started = false, moved = false, leaving = false, arrived = false, hovered = false;
+ let remaining = 5000, clockStarted = null, clockTimer = 0, poofTimer = 0;
+ const inViewport = element => {
+  const rect = element.getBoundingClientRect();
+  return rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth;
+ };
+ const interactionPaused = () => document.hidden || hovered || heroSurprise.contains(document.activeElement) || sheet.open;
+
+ function pauseClock(){
+  if (clockStarted !== null) remaining = Math.max(0, remaining - (performance.now() - clockStarted));
+  clockStarted = null;
+  clearTimeout(clockTimer);
+  clockTimer = 0;
+ }
+ function revealShelf(){
+  if (!moved || arrived || document.hidden || !inViewport(shelfSurprise)) return;
+  arrived = true;
+  if (!motionOff) shelfSurprise.classList.add('surprise-arriving');
+  observer?.disconnect();
+ }
+ function finishMove(){
+  if (interactionPaused()) { syncSurprise(); return; }
+  pauseClock();
+  clearTimeout(poofTimer);
+  moved = true;
+  leaving = false;
+  heroSurprise.hidden = true;
+  heroSurprise.classList.remove('surprise-leaving');
+  shelfSurprise.hidden = false;
+  observer?.unobserve(heroSurprise);
+  revealShelf();
+ }
+ function beginPoof(){
+  pauseClock();
+  if (interactionPaused()) return;
+  if (motionOff || !inViewport(heroSurprise)) { finishMove(); return; }
+  leaving = true;
+  heroSurprise.classList.add('surprise-leaving');
+  poofTimer = setTimeout(finishMove, 600);
+ }
+ function syncSurprise(){
+  if (moved) { revealShelf(); return; }
+  if (interactionPaused()) {
+   pauseClock();
+   if (leaving) {
+    clearTimeout(poofTimer);
+    leaving = false;
+    heroSurprise.classList.remove('surprise-leaving');
+   }
+   return;
+  }
+  // Visitors opening a link farther down the page can still discover the reward.
+  if (!started && hero.getBoundingClientRect().bottom <= 0) { finishMove(); return; }
+  if (!started) {
+   if (!inViewport(heroSurprise) || document.body.classList.contains('hero-entering')) return;
+   started = true;
+  }
+  if (leaving) {
+   if (motionOff) finishMove();
+   return;
+  }
+  if (clockStarted !== null) return;
+  if (remaining <= 0) { beginPoof(); return; }
+  clockStarted = performance.now();
+  clockTimer = setTimeout(beginPoof, remaining);
+ }
+
+ const observer = 'IntersectionObserver' in window ? new IntersectionObserver(syncSurprise, {threshold:.1}) : null;
+ observer?.observe(heroSurprise);
+ observer?.observe(shelfHeading);
+ heroSurprise.addEventListener('pointerenter', event => {
+  if (event.pointerType === 'touch') return;
+  hovered = true;
+  syncSurprise();
+ });
+ heroSurprise.addEventListener('pointerleave', () => { hovered = false; syncSurprise(); });
+ heroSurprise.addEventListener('focus', syncSurprise);
+ heroSurprise.addEventListener('blur', () => queueMicrotask(syncSurprise));
+ sheet.addEventListener('close', syncSurprise);
+ // Dialog opening moves focus, so pause immediately rather than at the next timeout.
+ sheet.addEventListener('focusin', syncSurprise);
+ document.addEventListener('visibilitychange', syncSurprise);
+ document.addEventListener('animationend', event => {
+  if (event.animationName === 'hero-icon-rise' || event.animationName === 'surprise-appear') syncSurprise();
+ });
+ addEventListener('scroll', syncSurprise, {passive:true});
+ addEventListener('resize', syncSurprise, {passive:true});
+ addEventListener('pageshow', syncSurprise);
+ addEventListener('hashchange', syncSurprise);
+ addEventListener('load', syncSurprise, {once:true});
+ reduce.addEventListener('change', syncSurprise);
+ syncSurprise();
+})();
