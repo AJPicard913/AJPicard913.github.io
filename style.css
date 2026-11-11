@@ -215,7 +215,7 @@
  .feature-copy h3{font-size:clamp(32px,8.5vw,46px)}
 }
 
-/* Websites: real pages, framed simply, with a wider product concept feature. */
+/* Websites: real pages, framed simply, with wider concept features. */
 .web-work{border-top:1px solid var(--line)}
 .web-work-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:40px}
 .web-work-heading h2{margin:0}
@@ -231,6 +231,8 @@
 .web-pocket{--web-tint:#deebe3}
 .web-ours{--web-tint:#eee8de}
 .web-guice{--web-tint:#f7ddc7}
+.web-quippy{--web-tint:#e4edff}
+.web-quippy .web-feature-label{color:#375d9c}
 .web-browser{display:block;overflow:hidden;border:1px solid #2330261c;border-bottom:0;border-radius:10px 10px 0 0;background:#fff;box-shadow:0 12px 30px -12px #263b3426;transform:translateY(0);transition:transform .35s cubic-bezier(.2,.7,.2,1)}
 .web-card:hover .web-browser{transform:translateY(-3px)}
 .web-browser-bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;min-height:34px;padding:9px 12px;border-bottom:1px solid #e8eae5;background:#fafbf9;color:#7a8077;font-size:10px;line-height:1;letter-spacing:.015em}
@@ -247,22 +249,22 @@
 .web-card-footer{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 20px;margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font-size:11px;line-height:1.6;color:#777d70}
 .web-card-action{color:#343b2c;font-weight:500}
 .web-project-featured{grid-column:1/-1}
-.web-guice{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
-.web-guice .web-stage{display:flex;align-items:center;padding:38px 32px}
-.web-guice .web-browser{width:100%;border-bottom:1px solid #2330261c;border-radius:10px}
-.web-guice .web-card-body{justify-content:center;padding:40px}
+.web-card-featured{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)}
+.web-card-featured .web-stage{display:flex;align-items:center;padding:38px 32px}
+.web-card-featured .web-browser{width:100%;border-bottom:1px solid #2330261c;border-radius:10px}
+.web-card-featured .web-card-body{justify-content:center;padding:40px}
 .web-feature-label{display:block;margin-bottom:24px;color:#986743;font-size:11px;font-weight:500;letter-spacing:.055em}
-.web-guice .web-card-title{font-size:clamp(38px,4vw,60px)}
-.web-guice .web-card-heading{margin-bottom:21px}
-.web-guice .web-card-footer{margin-top:8px}
+.web-card-featured .web-card-title{font-size:clamp(38px,4vw,60px)}
+.web-card-featured .web-card-heading{margin-bottom:21px}
+.web-card-featured .web-card-footer{margin-top:8px}
 .motion-off .web-card,.motion-off .web-browser,.motion-off .web-card-arrow{transition:none}
 @media(min-width:761px) and (max-width:1100px){
   .web-grid{gap:22px}
   .web-stage{padding:21px 21px 0}
   .web-card-body{padding:24px}
-  .web-guice{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)}
-  .web-guice .web-stage{padding:28px 22px}
-  .web-guice .web-card-body{padding:30px}
+  .web-card-featured{grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)}
+  .web-card-featured .web-stage{padding:28px 22px}
+  .web-card-featured .web-card-body{padding:30px}
   .web-card-footer{gap:8px 18px}
 }
 @media(max-width:760px){
@@ -276,19 +278,19 @@
   .web-card-heading h3{font-size:30px}
   .web-card-body>p,.web-card-description{font-size:15px;margin-bottom:23px}
   .web-card-footer{font-size:11px;gap:9px 20px}
-  .web-guice{display:flex}
-  .web-guice .web-stage{display:block;padding:22px 22px 0}
-  .web-guice .web-browser{border-radius:10px 10px 0 0;border-bottom:0}
-  .web-guice .web-card-body{padding:27px 24px 24px}
+  .web-card-featured{display:flex}
+  .web-card-featured .web-stage{display:block;padding:22px 22px 0}
+  .web-card-featured .web-browser{border-radius:10px 10px 0 0;border-bottom:0}
+  .web-card-featured .web-card-body{padding:27px 24px 24px}
   .web-feature-label{margin-bottom:19px;font-size:10px}
-  .web-guice .web-card-title{font-size:40px}
-  .web-guice .web-card-heading{margin-bottom:17px}
-  .web-guice .web-card-footer{margin-top:0}
+  .web-card-featured .web-card-title{font-size:40px}
+  .web-card-featured .web-card-heading{margin-bottom:17px}
+  .web-card-featured .web-card-footer{margin-top:0}
 }
 @media(max-width:370px){
   .web-work-heading h2{font-size:42px}
-  .web-stage,.web-guice .web-stage{padding:17px 17px 0}
-  .web-card-body,.web-guice .web-card-body{padding:23px 20px}
+  .web-stage,.web-card-featured .web-stage{padding:17px 17px 0}
+  .web-card-body,.web-card-featured .web-card-body{padding:23px 20px}
   .web-browser-bar{min-height:30px;padding:8px 9px;font-size:9px}
   .web-card-heading h3{font-size:28px}
 }
