@@ -50,7 +50,6 @@
 .work-heading{gap:40px;margin-bottom:32px}
 .work-heading>p{max-width:430px;font-size:17px}
 .work .results{margin:0 0 44px;padding:28px 0 35px;border-top:1px solid var(--line)}
-.work .project-feature+.results{margin:32px 0 0}
 .project-id>span{font-size:14px;letter-spacing:0;font-weight:500}
 .case-studies{padding:20px 0 80px;scroll-margin-top:35px}
 .case-studies-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:40px;margin-bottom:38px}
@@ -95,7 +94,6 @@
   .hero-links{gap:10px 22px}
   .work-heading>p{font-size:16px;max-width:39ch}
   .work .results{padding:26px 0 30px;margin-bottom:30px}
-  .work .project-feature+.results{margin:24px 0 0}
   .work .results>div:last-child strong{white-space:nowrap}
   .project-id>span{font-size:13px}
   .case-studies{padding:20px 0 60px}
