@@ -8,6 +8,7 @@ The site is static HTML, CSS, and JavaScript. GitHub Pages publishes the root of
 - `style.css`: responsive presentation
 - `main.js`: scroll animations and motion controls
 - `assets/`: official app icons and screenshots
+- `ours/`: standalone Ours: Shared Chores website at https://ajpicard.design/ours/
 - `lander/index.html`: redirects the former GoDaddy parking path to the homepage
 - `pocket/`: Pocket's marketing site at https://ajpicard.design/pocket/, migrated from published Sites version 16 with self-contained assets
 - `assets/aj-mark.svg`: the header’s aj✳ logo converted to vector paths

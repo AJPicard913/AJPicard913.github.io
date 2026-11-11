@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f5f3">
+  <meta name="description" content="A shared home deserves a shared chore list. Ours helps families and roommates assign chores, set due dates, approve completions, and celebrate with rewards.">
+  <meta name="color-scheme" content="light dark">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Ours: Shared Chores">
+  <meta property="og:description" content="A home you share. A list you share. Bring your people together with shared chores, clear due dates, and little rewards.">
+  <meta property="og:url" content="https://ajpicard.design/ours/">
+  <meta property="og:image" content="https://ajpicard.design/ours/assets/ours-app-icon.png">
+  <meta property="og:image:alt" content="The Ours shared household app icon.">
+  <title>Ours: Shared Chores</title>
+  <link rel="canonical" href="https://ajpicard.design/ours/">
+  <link rel="icon" type="image/png" href="assets/ours-favicon.png">
+  <link rel="apple-touch-icon" href="assets/ours-apple-touch-icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="shell nav" aria-label="Main navigation">
+      <a class="brand" href="#top" aria-label="Ours home">
+        <img src="assets/ours-brand-icon.webp" width="40" height="40" alt="">
+        <span>Ours<span class="brand-descriptor">Shared Chores</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#how-it-works">How it works</a>
+        <a href="#rewards">Rewards</a>
+        <a href="#widgets">Widgets</a>
+      </div>
+      <a class="button button-small" href="#how-it-works">Explore Ours</a>
+    </nav>
+    <div class="scroll-progress" aria-hidden="true"></div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="shell">
+        <div class="hero-heading" data-reveal>
+          <p class="eyebrow">A home you share. A list you share.</p>
+          <h1 id="hero-title">Ours: <span>Shared Chores</span></h1>
+          <p class="hero-mobile-copy">Know what needs doing, who's doing it, and when it's done.</p>
+        </div>
+        <div class="hero-scene">
+          <div class="hero-aside hero-intro" data-reveal data-delay="1">
+            <h2>A little less reminding.<br>A lot more together.</h2>
+            <p>Give everyone a part in looking after your home, with one shared chore list.</p>
+            <a class="button" href="#how-it-works">See how it works</a>
+            <span class="platform-note">For families, friends &amp; roommates</span>
+          </div>
+          <figure class="hero-product" data-reveal data-delay="1">
+            <div class="phone">
+              <picture>
+                <source media="(prefers-color-scheme: dark)" srcset="assets/ours-shot-chores.webp">
+                <img src="assets/ours-shot-chores-light.webp" width="1320" height="2868" alt="The Ours shared chore list, with assigned household members, categories, and chores awaiting approval." fetchpriority="high">
+              </picture>
+            </div>
+          </figure>
+          <div class="hero-aside hero-details" data-reveal data-delay="2">
+            <div class="hero-detail">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#users"></use></svg>
+              <div><h3>Everyone has a part.</h3><p>Assign to one person or share the task.</p></div>
+            </div>
+            <div class="hero-detail">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calendar-days"></use></svg>
+              <div><h3>Know what's next.</h3><p>Due dates and routines keep it clear.</p></div>
+            </div>
+            <div class="hero-detail">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check-check"></use></svg>
+              <div><h3>Done, and confirmed.</h3><p>A leader checks off every completion.</p></div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-mobile-action"><a class="button" href="#how-it-works">See how it works</a></div>
+      </div>
+      <div class="hero-bottom shell"><span>Less managing. More living.</span><a href="#how-it-works">Meet your new routine</a></div>
+    </section>
+
+    <section class="section workflow" id="how-it-works" aria-labelledby="workflow-title">
+      <div class="shell split-layout">
+        <div class="workflow-copy">
+          <div data-reveal>
+            <p class="eyebrow">From to-do to done</p>
+            <h2 id="workflow-title">A clear plan.<br>A shared effort.</h2>
+            <p class="section-copy">Bring your people together, make each chore clear, and give completed work a final check.</p>
+          </div>
+          <div class="workflow-tabs" role="tablist" aria-label="Explore the chore workflow" aria-orientation="vertical" data-reveal>
+            <button class="workflow-tab" id="step-create" role="tab" aria-selected="true" aria-controls="workflow-panel" tabindex="0" data-step="create">
+              <span class="step-number" aria-hidden="true">01</span>
+              <span><span class="step-title">Make the chore clear</span><span class="step-short-title">Create</span><span class="step-description">Choose the people, set a due date, and repeat the chores that come around again.</span></span>
+            </button>
+            <button class="workflow-tab" id="step-invite" role="tab" aria-selected="false" aria-controls="workflow-panel" tabindex="-1" data-step="invite">
+              <span class="step-number" aria-hidden="true">02</span>
+              <span><span class="step-title">Bring everyone in</span><span class="step-short-title">Invite</span><span class="step-description">Share your household's private invite link with family, friends, or roommates.</span></span>
+            </button>
+            <button class="workflow-tab" id="step-approve" role="tab" aria-selected="false" aria-controls="workflow-panel" tabindex="-1" data-step="approve">
+              <span class="step-number" aria-hidden="true">03</span>
+              <span><span class="step-title">Give it the final check</span><span class="step-short-title">Approve</span><span class="step-description">Leaders and assistant leaders review completions, with photo confirmation when needed.</span></span>
+            </button>
+          </div>
+        </div>
+        <div class="workflow-preview" role="tabpanel" id="workflow-panel" aria-labelledby="step-create" tabindex="0" data-reveal data-delay="1">
+          <p class="mobile-step-description" id="mobile-step-description">Choose the people, set a due date, and repeat the chores that come around again.</p>
+          <figure class="product-figure">
+            <div class="phone phone-workflow">
+              <picture>
+                <source id="workflow-image-dark" media="(prefers-color-scheme: dark)" srcset="assets/ours-shot-create.webp">
+                <img id="workflow-image" src="assets/ours-shot-create-light.webp" width="1320" height="2868" loading="lazy" alt="The New Chore screen with a title, category, assigned members, due date, and weekly repeat.">
+              </picture>
+            </div>
+            <figcaption id="workflow-caption">A place for every detail.</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="shell routine-details" data-reveal>
+        <div><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#calendar-days"></use></svg><span><strong>Due dates</strong><span>A clear time to aim for.</span></span></div>
+        <div><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#repeat"></use></svg><span><strong>Repeating chores</strong><span>Everyday routines, already planned.</span></span></div>
+        <div><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#camera"></use></svg><span><strong>Photo confirmation</strong><span>A little proof when you need it.</span></span></div>
+      </div>
+    </section>
+
+    <section class="section rewards" id="rewards" aria-labelledby="rewards-title">
+      <div class="shell rewards-layout">
+        <div data-reveal>
+          <p class="eyebrow">Good work deserves a little good</p>
+          <h2 id="rewards-title">Their effort.<br>Their little win.</h2>
+          <p class="section-copy">Movie-night picks. An ice cream run. A little extra screen time. Attach a reward to a chore and give everyone something to look forward to.</p>
+          <p class="reward-note"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#gift"></use></svg><span>Earned rewards stay in <strong>My Rewards</strong> on their profile.</span></p>
+        </div>
+        <figure class="reward-example" data-reveal data-delay="1">
+          <div class="screenshot-detail reward-detail">
+            <img src="assets/ours-shot-rewards.webp" width="1320" height="2868" loading="lazy" alt="My Rewards showing a movie-night pick, a ten-dollar ice cream run, and thirty minutes of extra screen time, each linked to a completed chore.">
+          </div>
+          <figcaption>Small rewards. Real recognition.</figcaption>
+        </figure>
+      </div>
+      <div class="shell approval-note" data-reveal>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#check-check"></use></svg>
+        <p><strong>A fair finish, every time.</strong> Leaders and assistant leaders manage rewards and approve chores. Every completion gets checked, including their own.</p>
+      </div>
+    </section>
+
+    <section class="section overview" id="overview" aria-labelledby="overview-title">
+      <div class="shell overview-layout">
+        <figure class="overview-example" data-reveal>
+          <div class="screenshot-detail overview-detail">
+            <picture>
+              <source media="(prefers-color-scheme: dark)" srcset="assets/ours-shot-overview.webp">
+              <img src="assets/ours-shot-overview-light.webp" width="1320" height="2868" loading="lazy" alt="The Ours Overview showing medals for completed and assigned chores, and weekly progress with on-time and late completions.">
+            </picture>
+          </div>
+          <figcaption>The little things add up.</figcaption>
+        </figure>
+        <div class="overview-copy" data-reveal data-delay="1">
+          <p class="eyebrow">See the shared effort</p>
+          <h2 id="overview-title">Progress worth<br>feeling good about.</h2>
+          <p class="section-copy">The work of running a home shouldn't go unnoticed. See who's pitching in and how your household is doing, week by week.</p>
+          <dl class="feature-list">
+            <div><dt>Weekly completions</dt><dd>Watch the finished chores add up.</dd></div>
+            <div><dt>Household leaderboard</dt><dd>Give everyone their moment of recognition.</dd></div>
+            <div><dt>Timing breakdown</dt><dd>See what's early, on time, and running late.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section widgets" id="widgets" aria-labelledby="widgets-title">
+      <div class="shell">
+        <div class="section-heading centered" data-reveal>
+          <p class="eyebrow">Right where you'll see it</p>
+          <h2 id="widgets-title">A glance. And you're on it.</h2>
+          <p class="section-copy">Today's list, your assigned chores, and household progress.<br class="desktop-break"> A little room on your Home Screen keeps it all in sight.</p>
+        </div>
+        <div class="widgets-layout">
+          <div class="widgets-left">
+            <figure class="widget-small" data-reveal>
+              <img src="assets/ours-widget-small.webp" width="510" height="510" loading="lazy" alt="Small Today widget with four chores and Clean the kitchen marked past due.">
+              <figcaption><span class="size-label">Small</span><h3>Today, at a glance.</h3><p>A quick look at what's on your list.</p></figcaption>
+            </figure>
+            <figure class="widget-medium" data-reveal data-delay="1">
+              <img src="assets/ours-widget-medium.webp" width="1092" height="510" loading="lazy" alt="Medium My Chores widget showing Jayden's two assigned chores: Fold the towels and Reset the living room.">
+              <figcaption><span class="size-label">Medium</span><h3>Your part, made clear.</h3><p>Assigned chores and due times, together.</p></figcaption>
+            </figure>
+          </div>
+          <figure class="widget-large" data-reveal data-delay="2">
+            <img src="assets/ours-widget-large.webp" width="1092" height="1146" loading="lazy" alt="Large Household Progress widget showing the Brown Home's completed, active and past-due chores, punctuality, and four member rankings.">
+            <figcaption><span class="size-label">Large</span><h3>The whole home in view.</h3><p>Shared progress, from one handy spot.</p></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pro" id="pro" aria-labelledby="pro-title">
+      <div class="shell pro-layout" data-reveal>
+        <div class="pro-brand"><img src="assets/ours-app-icon.webp" width="112" height="112" loading="lazy" alt="Ours Pro house, broom, and shared household icon."></div>
+        <div>
+          <p class="eyebrow">Ours Pro</p>
+          <h2 id="pro-title">A plan for your people.</h2>
+          <p class="section-copy">Shared chores, rewards, approvals, progress, and widgets.<br class="desktop-break"> Pick a weekly, yearly, or lifetime plan in the app.</p>
+        </div>
+        <a class="button" href="#download">Share with your household</a>
+      </div>
+    </section>
+
+    <section class="section download" id="download" aria-labelledby="download-title">
+      <div class="shell centered" data-reveal>
+        <p class="eyebrow">Your home. Your people. Ours.</p>
+        <h2 id="download-title">More life.<br>Less chore chat.</h2>
+        <p class="section-copy">A shared home feels better when everyone plays a part.</p>
+        <a class="button share-button" href="mailto:?subject=Ours%3A%20Shared%20Chores&amp;body=A%20shared%20chore%20list%20for%20our%20home.%20https%3A%2F%2Fajpicard.design%2Fours%2F" id="share-ours"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#share-2"></use></svg>Share Ours with your household</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <a class="brand" href="#top" aria-label="Ours home"><img src="assets/ours-brand-icon.webp" width="32" height="32" alt=""><span>Ours<span class="brand-descriptor">Shared Chores</span></span></a>
+      <span>Made for the people you call home.</span>
+      <a href="#top">Back to top</a>
+    </div>
+  </footer>
+
+</body>
+</html>
