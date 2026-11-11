@@ -1,0 +1,4283 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pocket - Expenses, budgets, and AI expense capture</title>
+  <meta name="description" content="Pocket helps you track expenses, understand spending, import CSVs, manage subscriptions, and message Pocket AI to capture expenses all day.">
+  <link rel="canonical" href="https://ajpicard.design/pocket/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pocket - Expenses, budgets, and AI expense capture">
+  <meta property="og:description" content="Track expenses, understand spending, manage subscriptions, and explore Pocket AI.">
+  <meta property="og:url" content="https://ajpicard.design/pocket/">
+  <meta property="og:image" content="https://ajpicard.design/pocket/assets/pocket-app-icon.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/pocket-tab-icon-2026.png">
+  <link rel="apple-touch-icon" href="assets/pocket-tab-icon-2026.png">
+  <style>
+    :root {
+      --ink: #0b0b0d;
+      --muted: #6f7177;
+      --line: rgba(12, 12, 14, 0.1);
+      --blue: #111111;
+      --cyan: #6d6f75;
+      --green: #2f3033;
+      --paper: #f7f7f8;
+      --glass: rgba(255, 255, 255, 0.78);
+      --dark: #0a1020;
+      --dark-2: #111827;
+      --shadow: 0 24px 80px rgba(15, 23, 42, 0.14);
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    #ai,
+    #features,
+    #workflow,
+    #pricing {
+      scroll-margin-top: 92px;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 4%, rgba(0, 0, 0, 0.08), transparent 30rem),
+        radial-gradient(circle at 92% 18%, rgba(125, 125, 130, 0.14), transparent 28rem),
+        linear-gradient(145deg, #ffffff 0%, #f2f3f5 52%, #fbfbfc 100%);
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    @keyframes floatY {
+      0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+      50% { transform: translateY(-10px) rotate(var(--tilt, 0deg)); }
+    }
+
+    @keyframes messagePop {
+      0% { opacity: 0; transform: translateY(14px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes softPulse {
+      0%, 100% { opacity: 0.58; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    @keyframes meterFill {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes heroPhoneFloat {
+      0%, 100% {
+        transform: translateX(var(--phone-x, 0)) translateY(0) rotate(var(--phone-rotate, -2deg));
+      }
+      50% {
+        transform: translateX(var(--phone-x, 0)) translateY(-13px) rotate(var(--phone-rotate-float, -1deg));
+      }
+    }
+
+    @keyframes phoneAura {
+      0%, 100% {
+        opacity: 0.34;
+        transform: scale(0.98);
+      }
+      50% {
+        opacity: 0.58;
+        transform: scale(1.04);
+      }
+    }
+
+    @keyframes screenSheen {
+      0% {
+        opacity: 0;
+        transform: translateX(-150%) rotate(17deg);
+      }
+      16% {
+        opacity: 0.42;
+      }
+      42%, 100% {
+        opacity: 0;
+        transform: translateX(210%) rotate(17deg);
+      }
+    }
+
+    @keyframes liveCard {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes textureDrift {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-72px, -72px, 0); }
+    }
+
+    @keyframes tickerMove {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes floatCard {
+      0%, 100% { transform: translate3d(0, var(--parallax-y, 0px), 0) rotate(var(--float-rotate, 0deg)); }
+      50% { transform: translate3d(0, calc(var(--parallax-y, 0px) - 12px), 0) rotate(calc(var(--float-rotate, 0deg) * -0.4)); }
+    }
+
+    @keyframes railSweep {
+      0% { transform: scaleX(0); transform-origin: left; }
+      48%, 100% { transform: scaleX(1); transform-origin: left; }
+    }
+
+    @keyframes pulseRing {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.12); }
+      50% { box-shadow: 0 0 0 9px rgba(0, 0, 0, 0); }
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .page {
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 3px;
+      pointer-events: none;
+      background: transparent;
+    }
+
+    .scroll-progress span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: scaleX(0);
+      transform-origin: left center;
+      background: linear-gradient(90deg, #050505, #5d5f66, #050505);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .site-texture {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      opacity: 0.42;
+      mix-blend-mode: multiply;
+    }
+
+    .site-texture::before {
+      content: "";
+      position: absolute;
+      inset: -90px;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.92), transparent 82%);
+      animation: textureDrift 22s linear infinite;
+    }
+
+    .site-texture::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0 36%, rgba(255, 255, 255, 0.74) 46%, transparent 58%),
+        linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.7));
+      opacity: 0.55;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(22px);
+      background: rgba(248, 251, 255, 0.72);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .nav-inner {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 950;
+      letter-spacing: 0;
+      font-size: 1.05rem;
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(37, 99, 255, 0.22);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 0.94rem;
+      font-weight: 760;
+      color: #4b5563;
+    }
+
+    .nav-cta,
+    .primary-cta,
+    .secondary-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      border: 1px solid transparent;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .nav-cta::after,
+    .primary-cta::after,
+    .secondary-cta::after {
+      content: "";
+      position: absolute;
+      inset: -120% auto -120% -70%;
+      width: 42%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.48), transparent);
+      transform: rotate(22deg);
+      transition: left 520ms ease;
+      z-index: -1;
+    }
+
+    .nav-cta,
+    .primary-cta {
+      color: #fff;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      box-shadow: 0 16px 38px rgba(37, 99, 255, 0.28);
+    }
+
+    .secondary-cta {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.8);
+      border-color: var(--line);
+    }
+
+    .nav-cta:hover,
+    .primary-cta:hover,
+    .secondary-cta:hover {
+      transform: translateY(-2px);
+    }
+
+    .nav-cta:hover::after,
+    .primary-cta:hover::after,
+    .secondary-cta:hover::after {
+      left: 130%;
+    }
+
+    .hero {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 68px 0 52px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
+      gap: 46px;
+      align-items: center;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 28px -28px auto;
+      height: 62%;
+      border-radius: 54px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0)),
+        repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.035) 0 1px, transparent 1px 15px);
+      border: 1px solid rgba(255, 255, 255, 0.68);
+      opacity: 0.52;
+      z-index: -1;
+      transform: skewY(-1.4deg);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      height: 36px;
+      padding: 0 13px;
+      border: 1px solid rgba(37, 99, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.74);
+      color: #161719;
+      font-size: 0.85rem;
+      font-weight: 900;
+      box-shadow: 0 14px 28px rgba(37, 99, 255, 0.08);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px rgba(11, 159, 70, 0.12);
+    }
+
+    h1 {
+      margin: 22px 0 18px;
+      font-size: clamp(3.25rem, 8vw, 6.4rem);
+      line-height: 0.9;
+      letter-spacing: 0;
+      font-weight: 1000;
+      max-width: 11ch;
+    }
+
+    .hero-copy {
+      max-width: 640px;
+      font-size: clamp(1.12rem, 2vw, 1.35rem);
+      line-height: 1.55;
+      color: #4b5563;
+      font-weight: 620;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 34px;
+      max-width: 630px;
+    }
+
+    .metric {
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.08);
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 1000;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 760;
+    }
+
+    .hero-art {
+      position: relative;
+      min-height: 680px;
+    }
+
+    .hero-float-card {
+      position: absolute;
+      z-index: 3;
+      min-width: 170px;
+      padding: 14px 15px;
+      border-radius: 24px;
+      color: #0a0a0b;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      box-shadow: 0 22px 58px rgba(0, 0, 0, 0.14);
+      backdrop-filter: blur(18px);
+      animation: floatCard 6.4s ease-in-out infinite;
+      transform: translate3d(0, var(--parallax-y, 0px), 0) rotate(var(--float-rotate, 0deg));
+      will-change: transform;
+    }
+
+    .hero-float-card span {
+      display: block;
+      color: #686a70;
+      font-size: 0.76rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hero-float-card strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 1.16rem;
+      line-height: 1.05;
+      font-weight: 1000;
+    }
+
+    .hero-float-card small {
+      display: block;
+      margin-top: 5px;
+      color: #77797f;
+      font-size: 0.72rem;
+      font-weight: 820;
+    }
+
+    .hero-float-card::before {
+      content: "";
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #101113;
+      animation: pulseRing 2.8s ease-in-out infinite;
+    }
+
+    .hero-float-one {
+      left: -4px;
+      top: 9%;
+      --float-rotate: -3deg;
+      animation-delay: 220ms;
+    }
+
+    .hero-float-two {
+      right: -4px;
+      top: 37%;
+      --float-rotate: 3deg;
+      animation-delay: 760ms;
+    }
+
+    .hero-float-three {
+      left: 6%;
+      bottom: 12%;
+      --float-rotate: 2deg;
+      animation-delay: 1240ms;
+    }
+
+    .phone {
+      position: absolute;
+      left: 15%;
+      top: 0;
+      width: min(430px, 74vw);
+      padding: 18px;
+      border-radius: 52px;
+      background: #0b1020;
+      box-shadow: 0 34px 90px rgba(8, 17, 31, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      --phone-x: 0;
+      --phone-rotate: -2deg;
+      --phone-rotate-float: -1deg;
+      transform: translateX(var(--phone-x)) rotate(var(--phone-rotate));
+      animation: heroPhoneFloat 7s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .phone::before,
+    .phone::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .phone::before {
+      inset: 11px;
+      border-radius: 45px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 1px 18px rgba(255, 255, 255, 0.12);
+      z-index: 3;
+    }
+
+    .phone::after {
+      inset: -22px;
+      border-radius: 68px;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.32), transparent 24rem),
+        radial-gradient(circle at 18% 80%, rgba(0, 0, 0, 0.2), transparent 18rem);
+      filter: blur(4px);
+      z-index: -1;
+      animation: phoneAura 5.5s ease-in-out infinite;
+    }
+
+    .phone-screen {
+      position: relative;
+      isolation: isolate;
+      min-height: 610px;
+      border-radius: 38px;
+      overflow: hidden;
+      background:
+        linear-gradient(145deg, rgba(11, 16, 32, 0.92), rgba(16, 24, 39, 0.88)),
+        radial-gradient(circle at 18% 10%, rgba(37, 99, 255, 0.26), transparent 16rem);
+      padding: 26px 22px;
+      color: #fff;
+    }
+
+    .real-phone .phone-screen,
+    .screenshot-phone .mini-screen,
+    .screenshot-phone .product-screen {
+      min-height: auto;
+      aspect-ratio: 760 / 1558;
+      padding: 0;
+      background: #050608;
+    }
+
+    .real-phone .phone-screen::before,
+    .screenshot-phone::before,
+    .screenshot-phone .mini-screen::before,
+    .screenshot-phone .product-screen::before {
+      display: none;
+    }
+
+    .phone-screenshot {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      border-radius: inherit;
+    }
+
+    .screenshot-phone .product-screen,
+    .screenshot-phone .mini-screen {
+      overflow: hidden;
+    }
+
+    .phone-screen::before {
+      content: "";
+      position: absolute;
+      inset: -22% auto -22% -40%;
+      width: 34%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      pointer-events: none;
+      z-index: 0;
+      animation: screenSheen 6.5s ease-in-out infinite;
+    }
+
+    .phone-top,
+    .screen-title,
+    .screen-date,
+    .dash-grid,
+    .breakdown-card,
+    .expense-list {
+      position: relative;
+      z-index: 1;
+    }
+
+    .phone-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 34px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 0.86rem;
+      font-weight: 800;
+    }
+
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .screen-title {
+      font-size: 2.6rem;
+      line-height: 1;
+      font-weight: 1000;
+      margin-bottom: 8px;
+    }
+
+    .screen-date {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.58);
+      font-weight: 820;
+      margin-bottom: 22px;
+    }
+
+    .dash-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+
+    .dash-card,
+    .breakdown-card,
+    .expense-list,
+    .chat-card,
+    .widget-card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+    }
+
+    .dash-card {
+      border-radius: 24px;
+      padding: 15px;
+      animation: liveCard 5.4s ease-in-out infinite;
+    }
+
+    .dash-card:nth-child(2) {
+      animation-delay: 620ms;
+    }
+
+    .dash-label {
+      color: #d9dadd;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      font-weight: 1000;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .dash-amount {
+      font-size: 1.45rem;
+      font-weight: 1000;
+    }
+
+    .breakdown-card {
+      border-radius: 28px;
+      padding: 18px;
+      margin-bottom: 15px;
+      animation: liveCard 6.1s ease-in-out infinite;
+      animation-delay: 260ms;
+    }
+
+    .breakdown-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .breakdown-head h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 1000;
+    }
+
+    .budget-line {
+      color: #4ade80;
+      font-size: 0.8rem;
+      font-weight: 850;
+      margin-top: 4px;
+    }
+
+    .donut-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .donut {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #0b1020 0 42%, transparent 43%),
+        conic-gradient(#f4f4f5 0 23%, #b9bbc0 23% 41%, #76777c 41% 57%, #3e3f43 57% 70%, #9ca3af 70% 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 1000;
+      text-align: center;
+      line-height: 1;
+      box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.04);
+    }
+
+    .donut strong {
+      display: block;
+      font-size: 1.18rem;
+      line-height: 1;
+    }
+
+    .donut small {
+      display: block;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.7rem;
+      line-height: 1;
+      margin-top: 4px;
+    }
+
+    .legend {
+      flex: 1;
+      display: grid;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .legend-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .expense-list {
+      border-radius: 28px;
+      padding: 17px;
+    }
+
+    .expense-list h3 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+      letter-spacing: 0.5px;
+      font-weight: 1000;
+    }
+
+    .expense-row {
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      animation: messagePop 520ms cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .expense-row:first-of-type {
+      border-top: 0;
+    }
+
+    .expense-row:nth-of-type(2) {
+      animation-delay: 140ms;
+    }
+
+    .expense-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      background: rgba(72, 202, 228, 0.2);
+      display: grid;
+      place-items: center;
+      color: #f4f4f5;
+      font-weight: 1000;
+    }
+
+    .expense-main strong,
+    .expense-price strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 1000;
+    }
+
+    .expense-main span,
+    .expense-price span {
+      display: block;
+      color: rgba(255, 255, 255, 0.56);
+      font-size: 0.75rem;
+      font-weight: 750;
+      margin-top: 2px;
+    }
+
+    .expense-price {
+      text-align: right;
+    }
+
+    .section {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 76px 0;
+    }
+
+    .signal-strip {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 12px 0 28px;
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    }
+
+    .signal-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      animation: tickerMove 34s linear infinite;
+    }
+
+    .signal-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 46px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.92);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.08);
+      color: #111113;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .signal-item::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0d0d0f;
+    }
+
+    .showcase {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 88px 0 28px;
+    }
+
+    .showcase-shell {
+      position: relative;
+      overflow: hidden;
+      border-radius: 52px;
+      padding: 42px;
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(244, 245, 247, 0.72)),
+        repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.03) 0 1px, transparent 1px 82px);
+      border: 1px solid rgba(255, 255, 255, 0.94);
+      box-shadow: 0 30px 110px rgba(0, 0, 0, 0.12);
+    }
+
+    .showcase-shell::before {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border-radius: 38px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      pointer-events: none;
+    }
+
+    .showcase-heading {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.58fr);
+      gap: 34px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .showcase-heading h2 {
+      margin: 0;
+      font-size: clamp(2.1rem, 4.5vw, 4.45rem);
+      line-height: 0.94;
+      font-weight: 1000;
+      max-width: 780px;
+    }
+
+    .showcase-heading p {
+      margin: 0;
+      color: #686a70;
+      font-size: 1.02rem;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .showcase-stage {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 0.78fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .journey-rail {
+      position: relative;
+      display: grid;
+      gap: 14px;
+      align-content: center;
+      padding-left: 22px;
+    }
+
+    .journey-rail::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 18px;
+      bottom: 18px;
+      width: 2px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .journey-rail::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 18px;
+      width: 2px;
+      height: calc(100% - 36px);
+      border-radius: 999px;
+      background: #0d0d0f;
+      animation: railSweep 3.8s ease-in-out infinite;
+    }
+
+    .journey-step {
+      position: relative;
+      padding: 18px 18px 18px 20px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.08);
+    }
+
+    .journey-step::before {
+      content: "";
+      position: absolute;
+      left: -25px;
+      top: 24px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0d0d0f;
+      box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.88);
+    }
+
+    .journey-step small {
+      color: #6c6e73;
+      font-size: 0.78rem;
+      font-weight: 1000;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .journey-step h3 {
+      margin: 7px 0 6px;
+      font-size: 1.35rem;
+      line-height: 1.04;
+      font-weight: 1000;
+    }
+
+    .journey-step p {
+      margin: 0;
+      color: #64676d;
+      line-height: 1.44;
+      font-weight: 630;
+    }
+
+    .showcase-phones {
+      position: relative;
+      min-height: 610px;
+      display: grid;
+      place-items: center;
+    }
+
+    .showcase-phone {
+      position: absolute;
+      width: min(292px, 48%);
+      padding: 12px;
+      border-radius: 42px;
+      background: linear-gradient(145deg, #040405, #25262a);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 30px 86px rgba(0, 0, 0, 0.26);
+      will-change: transform;
+      transition: transform 500ms cubic-bezier(.2, .8, .2, 1);
+    }
+
+    .showcase-phone.primary {
+      left: 8%;
+      top: 3%;
+      transform: rotate(-4deg);
+      z-index: 2;
+    }
+
+    .showcase-phone.secondary {
+      right: 4%;
+      bottom: 0;
+      transform: rotate(4deg);
+      z-index: 1;
+    }
+
+    .showcase-phone:hover {
+      z-index: 4;
+      transform: rotate(0deg) translateY(-10px) scale(1.02);
+    }
+
+    .showcase-phone-screen {
+      aspect-ratio: 760 / 1558;
+      overflow: hidden;
+      border-radius: 31px;
+      background: #070708;
+    }
+
+    .showcase-card {
+      position: absolute;
+      left: 42%;
+      top: 40%;
+      z-index: 3;
+      max-width: 300px;
+      padding: 18px;
+      border-radius: 28px;
+      background: rgba(10, 10, 12, 0.88);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
+      backdrop-filter: blur(18px);
+      transform: translate3d(0, var(--parallax-y, 0), 0);
+      will-change: transform;
+    }
+
+    .showcase-card small {
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 0.76rem;
+      font-weight: 1000;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .showcase-card strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 1.36rem;
+      line-height: 1.08;
+      font-weight: 1000;
+    }
+
+    .showcase-card span {
+      display: block;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.68);
+      font-weight: 720;
+      line-height: 1.35;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: 0.95;
+      letter-spacing: 0;
+      font-weight: 1000;
+      max-width: 760px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.5;
+      font-weight: 620;
+      max-width: 390px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      min-height: 280px;
+      border-radius: 32px;
+      padding: 24px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 22px 70px rgba(15, 23, 42, 0.1);
+      overflow: hidden;
+      position: relative;
+      transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-7px);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.14);
+      border-color: rgba(255, 255, 255, 1);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 17px;
+      display: grid;
+      place-items: center;
+      background: #e7f0ff;
+      color: #0d0d0f;
+      font-weight: 1000;
+      font-size: 1.2rem;
+      margin-bottom: 26px;
+      transition: transform 240ms ease, background 240ms ease;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.06) rotate(-4deg);
+      background: rgba(0, 0, 0, 0.12);
+    }
+
+    .feature-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
+      line-height: 1.05;
+      font-weight: 1000;
+    }
+
+    .feature-card p {
+      margin: 0;
+      color: #5f6b7a;
+      line-height: 1.5;
+      font-weight: 610;
+    }
+
+    .feature-visual {
+      margin-top: 24px;
+      min-height: 136px;
+      border-radius: 26px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.9), transparent 9rem),
+        linear-gradient(145deg, rgba(246, 247, 249, 0.96), rgba(224, 226, 230, 0.72));
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.86), 0 16px 38px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      position: relative;
+      transition: transform 260ms ease;
+    }
+
+    .feature-card:hover .feature-visual {
+      transform: translateY(-3px);
+    }
+
+    .feature-visual::after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      right: 18px;
+      top: 18px;
+      border-radius: 50%;
+      background: #111113;
+      opacity: 0.18;
+      animation: softPulse 2.8s ease-in-out infinite;
+    }
+
+    .visual-topline,
+    .visual-field,
+    .visual-row,
+    .sub-card,
+    .tiny-widget,
+    .limit-row {
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+    }
+
+    .visual-topline,
+    .visual-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 900;
+    }
+
+    .visual-topline {
+      margin-bottom: 10px;
+      color: #5f6065;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .visual-topline strong {
+      color: #0b0b0d;
+      font-size: 1rem;
+    }
+
+    .visual-field {
+      margin-top: 8px;
+      color: #73757a;
+    }
+
+    .visual-field strong {
+      color: #111113;
+    }
+
+    .visual-add {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: #0b0b0d;
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 900;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 220ms ease;
+    }
+
+    .feature-card:hover .visual-add {
+      transform: rotate(90deg) scale(1.05);
+    }
+
+    .mapping-visual {
+      display: grid;
+      gap: 10px;
+    }
+
+    .visual-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 14px;
+      border-radius: 18px;
+      font-weight: 940;
+    }
+
+    .visual-row small {
+      color: #6e7075;
+      font-size: 0.78rem;
+      font-weight: 850;
+    }
+
+    .visual-pill {
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: white;
+      background: #101113;
+      font-size: 0.8rem;
+    }
+
+    .subscription-visual {
+      display: grid;
+      align-content: space-between;
+      gap: 12px;
+    }
+
+    .sub-card {
+      display: grid;
+      gap: 4px;
+      padding: 14px;
+      border-radius: 20px;
+    }
+
+    .sub-card span {
+      color: #6f7177;
+      font-size: 0.8rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .sub-card strong {
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .sub-card small {
+      color: #6d6f75;
+      font-weight: 820;
+    }
+
+    .cycle-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .cycle-row span {
+      text-align: center;
+      padding: 9px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.62);
+      color: #6b6c70;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .cycle-row span.active {
+      background: #0c0c0d;
+      color: white;
+    }
+
+    .dashboard-visual {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mini-tabs span {
+      flex: 1;
+      text-align: center;
+      padding: 8px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #6c6e73;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .mini-tabs .active {
+      background: #0e0e10;
+      color: #fff;
+    }
+
+    .mini-dashboard-body {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .tiny-donut {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at center, #f5f5f6 0 45%, transparent 46%),
+        conic-gradient(#0b0b0d 0 34%, #7b7d82 34% 58%, #c9cacf 58% 100%);
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.1);
+    }
+
+    .tiny-legend {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tiny-legend span {
+      display: grid;
+      grid-template-columns: 8px 1fr auto;
+      gap: 8px;
+      align-items: center;
+      color: #4b4d52;
+      font-size: 0.82rem;
+      font-weight: 900;
+    }
+
+    .tiny-legend span::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #111113;
+    }
+
+    .tiny-legend span:nth-child(2)::before {
+      background: #77797f;
+    }
+
+    .tiny-legend span:nth-child(3)::before {
+      background: #c8c9ce;
+    }
+
+    .widget-visual {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .tiny-widget {
+      min-height: 56px;
+      border-radius: 18px;
+      padding: 12px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .tiny-widget small {
+      color: #6e7075;
+      font-size: 0.72rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tiny-widget strong {
+      font-size: 1.18rem;
+      line-height: 1;
+    }
+
+    .limit-visual {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+    }
+
+    .limit-row {
+      padding: 13px 14px;
+      border-radius: 18px;
+    }
+
+    .limit-row header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      color: #55575d;
+      font-size: 0.84rem;
+      font-weight: 950;
+    }
+
+    .limit-track {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .limit-track span {
+      display: block;
+      height: 100%;
+      width: var(--fill, 50%);
+      transform-origin: left;
+      border-radius: inherit;
+      background: #111113;
+      animation: meterFill 900ms ease both;
+    }
+
+    .share-visual {
+      display: grid;
+      align-content: center;
+      gap: 10px;
+    }
+
+    .share-status,
+    .share-member-row {
+      border-radius: 18px;
+      padding: 13px 14px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+    }
+
+    .share-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-weight: 950;
+    }
+
+    .share-status span {
+      color: #5e6167;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .share-badge {
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: white;
+      background: #111113;
+      font-size: 0.78rem;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .share-member-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      color: #111113;
+      font-weight: 940;
+    }
+
+    .share-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: #111113;
+      font-size: 0.78rem;
+      font-weight: 950;
+    }
+
+    .share-member-row small {
+      display: block;
+      margin-top: 2px;
+      color: #77797f;
+      font-size: 0.72rem;
+      font-weight: 850;
+    }
+
+    .share-member-row > span:last-child {
+      color: #65676d;
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .ai-band {
+      border-radius: 46px;
+      padding: 34px;
+      color: white;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(37, 99, 255, 0.48), transparent 24rem),
+        radial-gradient(circle at 86% 20%, rgba(22, 199, 255, 0.28), transparent 24rem),
+        linear-gradient(145deg, #07101f, #101827 72%, #07101f);
+      box-shadow: 0 26px 90px rgba(8, 17, 31, 0.3);
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 28px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .ai-band h2 {
+      margin: 0 0 16px;
+      font-size: clamp(2.4rem, 5vw, 4.6rem);
+      line-height: 0.94;
+      font-weight: 1000;
+      max-width: 650px;
+    }
+
+    .ai-band p {
+      margin: 0 0 24px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 1.08rem;
+      line-height: 1.55;
+      font-weight: 620;
+    }
+
+    .ai-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .ai-pills span {
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.88rem;
+      font-weight: 800;
+    }
+
+    .message-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bubble {
+      padding: 16px 18px;
+      border-radius: 26px;
+      font-weight: 800;
+      line-height: 1.35;
+      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.1);
+    }
+
+    .bubble.user {
+      background: rgba(255, 255, 255, 0.14);
+      color: rgba(255, 255, 255, 0.9);
+      justify-self: start;
+      max-width: 82%;
+    }
+
+    .bubble.pocket {
+      background: linear-gradient(135deg, #0b0b0d, #f4f4f5);
+      color: white;
+      justify-self: end;
+      max-width: 82%;
+    }
+
+    .bubble small {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 0.8rem;
+      font-weight: 720;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .workflow-step {
+      padding: 20px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 13px;
+      background: #111827;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      margin-bottom: 20px;
+    }
+
+    .workflow-step h3 {
+      margin: 0 0 8px;
+      font-size: 1.15rem;
+      font-weight: 1000;
+    }
+
+    .workflow-step p {
+      margin: 0;
+      color: #627083;
+      line-height: 1.45;
+      font-weight: 610;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border-radius: 38px;
+      padding: 28px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      box-shadow: 0 20px 70px rgba(15, 23, 42, 0.1);
+      min-height: 430px;
+    }
+
+    .panel.dark {
+      background: #0b1020;
+      color: white;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      line-height: 0.96;
+      font-weight: 1000;
+    }
+
+    .panel p {
+      margin: 0;
+      color: #617085;
+      font-size: 1rem;
+      line-height: 1.55;
+      font-weight: 620;
+    }
+
+    .panel.dark p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .import-table {
+      margin-top: 24px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .map-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: #f2f6fb;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      font-weight: 860;
+    }
+
+    .map-row span:last-child {
+      color: var(--blue);
+    }
+
+    .widget-grid {
+      margin-top: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .widget-card {
+      border-radius: 24px;
+      padding: 18px;
+      color: white;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .widget-card small {
+      color: #d9dadd;
+      font-weight: 1000;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .widget-card strong {
+      display: block;
+      font-size: 1.7rem;
+      margin-top: 10px;
+      font-weight: 1000;
+    }
+
+    .ai-spotlight {
+      width: min(1180px, calc(100% - 40px));
+      margin: 22px auto 0;
+      border-radius: 54px;
+      padding: 42px;
+      color: white;
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(360px, 1.15fr);
+      gap: 38px;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+      background:
+        radial-gradient(circle at 78% 20%, rgba(255, 255, 255, 0.16), transparent 24rem),
+        radial-gradient(circle at 20% 14%, rgba(91, 141, 255, 0.35), transparent 22rem),
+        linear-gradient(145deg, #050506, #111318 72%, #050506);
+      box-shadow: 0 34px 110px rgba(0, 0, 0, 0.34);
+    }
+
+    .ai-spotlight::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      pointer-events: none;
+    }
+
+    .ai-copy h2 {
+      margin: 16px 0;
+      font-size: clamp(3rem, 7vw, 6.2rem);
+      line-height: 0.9;
+      font-weight: 1000;
+      max-width: 9ch;
+    }
+
+    .ai-copy p {
+      margin: 0 0 24px;
+      max-width: 520px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 1.08rem;
+      line-height: 1.55;
+      font-weight: 660;
+    }
+
+    .ai-capabilities {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 540px;
+    }
+
+    .ai-capabilities span {
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    .ai-device-wrap {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mini-iphone {
+      width: min(310px, 100%);
+      margin: 0 auto;
+      padding: 13px;
+      border-radius: 42px;
+      background: linear-gradient(145deg, #030304, #242529);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      position: relative;
+    }
+
+    .mini-iphone::before {
+      content: "";
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      width: 88px;
+      height: 24px;
+      border-radius: 0 0 18px 18px;
+      background: #030304;
+      transform: translateX(-50%);
+      z-index: 2;
+    }
+
+    .mini-screen {
+      min-height: 550px;
+      border-radius: 31px;
+      overflow: hidden;
+      background: #f5f6f8;
+      color: #0d0d0f;
+      padding: 32px 18px 18px;
+      position: relative;
+    }
+
+    .mini-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #111113;
+      font-size: 0.78rem;
+      font-weight: 950;
+      margin-bottom: 20px;
+    }
+
+    .imessage-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .imessage-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: #111113;
+      font-weight: 1000;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .imessage-head strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.1;
+    }
+
+    .imessage-head span {
+      color: #73757a;
+      font-size: 0.78rem;
+      font-weight: 820;
+    }
+
+    .ai-text-bubble {
+      width: fit-content;
+      max-width: 90%;
+      padding: 12px 14px;
+      border-radius: 21px;
+      margin: 10px 0;
+      font-size: 0.92rem;
+      line-height: 1.28;
+      font-weight: 850;
+      animation: messagePop 620ms cubic-bezier(.2, .8, .2, 1) both;
+    }
+
+    .ai-text-bubble.user {
+      margin-left: auto;
+      color: white;
+      background: #0a84ff;
+      border-bottom-right-radius: 8px;
+      animation-delay: 120ms;
+    }
+
+    .ai-text-bubble.bot {
+      color: #0d0d0f;
+      background: #e8e9ed;
+      border-bottom-left-radius: 8px;
+      animation-delay: 260ms;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 12px 14px;
+      border-radius: 21px;
+      background: #e8e9ed;
+      margin-top: 8px;
+    }
+
+    .typing-dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #8b8d93;
+      animation: softPulse 1.4s ease-in-out infinite;
+    }
+
+    .typing-dots i:nth-child(2) {
+      animation-delay: 120ms;
+    }
+
+    .typing-dots i:nth-child(3) {
+      animation-delay: 240ms;
+    }
+
+    .ai-proof-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .ai-proof-card {
+      border-radius: 26px;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18);
+    }
+
+    .ai-proof-card small {
+      color: rgba(255, 255, 255, 0.58);
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .ai-proof-card strong {
+      display: block;
+      margin-top: 7px;
+      font-size: 1.35rem;
+      line-height: 1.05;
+      font-weight: 1000;
+    }
+
+    .screens-section {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 42px 0;
+    }
+
+    .screens-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.55fr);
+      gap: 30px;
+      align-items: end;
+      margin-bottom: 22px;
+    }
+
+    .screens-intro h2 {
+      margin: 0;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: 0.92;
+      font-weight: 1000;
+      max-width: 760px;
+    }
+
+    .screens-intro p {
+      margin: 0;
+      color: #686a70;
+      font-size: 1.06rem;
+      line-height: 1.55;
+      font-weight: 650;
+    }
+
+    .screen-gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .screen-card {
+      border-radius: 42px;
+      padding: 22px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.94);
+      box-shadow: 0 26px 86px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      min-height: 660px;
+      display: grid;
+      align-content: space-between;
+    }
+
+    .screen-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+      line-height: 1;
+      font-weight: 1000;
+    }
+
+    .screen-card p {
+      margin: 0 0 18px;
+      color: #686a70;
+      line-height: 1.45;
+      font-weight: 650;
+    }
+
+    .product-phone {
+      width: min(280px, 100%);
+      justify-self: center;
+      padding: 12px;
+      border-radius: 40px;
+      background: linear-gradient(145deg, #050506, #25262a);
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      transform: rotate(var(--angle, -1deg));
+      transition: transform 260ms ease;
+    }
+
+    .screen-card:hover .product-phone {
+      transform: rotate(0deg) translateY(-6px);
+    }
+
+    .product-screen {
+      min-height: 480px;
+      border-radius: 30px;
+      overflow: hidden;
+      background: #f7f7f8;
+      padding: 24px 16px;
+      color: #0d0d0f;
+    }
+
+    .product-screen.dark {
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255, 255, 255, 0.12), transparent 12rem),
+        linear-gradient(145deg, #101114, #202125);
+      color: white;
+    }
+
+    .mock-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 950;
+      margin-bottom: 18px;
+    }
+
+    .mock-title {
+      font-size: 1.55rem;
+      line-height: 1;
+      font-weight: 1000;
+      margin-bottom: 14px;
+    }
+
+    .mock-field,
+    .mock-row,
+    .home-widget,
+    .subscription-tile {
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(0, 0, 0, 0.07);
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.06);
+    }
+
+    .mock-field {
+      padding: 13px 14px;
+      margin-bottom: 9px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #6e7075;
+      font-weight: 900;
+    }
+
+    .mock-field strong {
+      color: #0d0d0f;
+    }
+
+    .mock-check {
+      margin-top: 16px;
+      height: 48px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: white;
+      background: #0d0d0f;
+      font-weight: 1000;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .home-widget-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .home-widget {
+      min-height: 96px;
+      padding: 14px;
+      display: grid;
+      align-content: space-between;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: white;
+    }
+
+    .home-widget.wide {
+      grid-column: 1 / -1;
+      min-height: 110px;
+    }
+
+    .home-widget small {
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 0.72rem;
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .home-widget strong {
+      font-size: 1.35rem;
+      line-height: 1;
+      font-weight: 1000;
+    }
+
+    .mock-row {
+      padding: 12px 13px;
+      margin-bottom: 9px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      font-weight: 950;
+    }
+
+    .mock-row small {
+      display: block;
+      color: #7a7c81;
+      font-weight: 850;
+      margin-top: 2px;
+    }
+
+    .mock-row span:last-child {
+      padding: 7px 9px;
+      border-radius: 999px;
+      background: #111113;
+      color: white;
+      font-size: 0.76rem;
+      font-weight: 950;
+    }
+
+    .subscription-tile {
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .subscription-tile small {
+      color: #77797f;
+      font-weight: 900;
+    }
+
+    .subscription-tile strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 1.25rem;
+      font-weight: 1000;
+    }
+
+    .pricing {
+      display: grid;
+      grid-template-columns: 0.82fr 1fr 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .pricing-intro,
+    .price-card {
+      border-radius: 34px;
+      padding: 26px;
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 20px 70px rgba(15, 23, 42, 0.1);
+    }
+
+    .pricing-intro h2,
+    .price-card h3 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 1000;
+    }
+
+    .pricing-intro p,
+    .price-card p {
+      color: var(--muted);
+      font-weight: 620;
+      line-height: 1.5;
+    }
+
+    .price-card.featured {
+      color: white;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(22, 199, 255, 0.32), transparent 16rem),
+        linear-gradient(145deg, #0a1020, #111827);
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin: 22px 0 18px;
+    }
+
+    .price strong {
+      font-size: 3.2rem;
+      line-height: 1;
+      font-weight: 1000;
+    }
+
+    .price span {
+      color: inherit;
+      opacity: 0.64;
+      font-weight: 800;
+    }
+
+    .check-list {
+      display: grid;
+      gap: 11px;
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .check-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      color: inherit;
+      font-weight: 760;
+      line-height: 1.35;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: white;
+      background: var(--green);
+      font-size: 0.8rem;
+      font-weight: 1000;
+    }
+
+    .final-cta {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto 52px;
+      border-radius: 46px;
+      color: white;
+      padding: 46px;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(37, 99, 255, 0.48), transparent 22rem),
+        linear-gradient(145deg, #08111f, #101827);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 28px;
+      align-items: center;
+      box-shadow: 0 28px 90px rgba(8, 17, 31, 0.3);
+    }
+
+    .final-cta h2 {
+      margin: 0 0 10px;
+      font-size: clamp(2.2rem, 5vw, 4.4rem);
+      line-height: 0.94;
+      font-weight: 1000;
+    }
+
+    .final-cta p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 1.05rem;
+      font-weight: 620;
+      line-height: 1.5;
+      max-width: 680px;
+    }
+
+    footer {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 30px 0 46px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: #64748b;
+      font-weight: 720;
+      border-top: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    @media (max-width: 980px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 46px;
+      }
+
+      h1 {
+        max-width: 10ch;
+      }
+
+      .hero-art {
+        min-height: 640px;
+      }
+
+      .phone {
+        left: 50%;
+        --phone-x: -56%;
+        --phone-rotate: -2deg;
+        --phone-rotate-float: -1deg;
+      }
+
+      .section-heading,
+      .ai-band,
+      .ai-spotlight,
+      .ai-device-wrap,
+      .screens-intro,
+      .split,
+      .final-cta {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid,
+      .screen-gallery,
+      .workflow,
+      .pricing {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pricing-intro {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .nav-inner,
+      .hero,
+      .section,
+      .screens-section,
+      .ai-spotlight,
+      .final-cta,
+      footer {
+        width: min(100% - 28px, 1180px);
+      }
+
+      .nav-inner {
+        min-height: 66px;
+      }
+
+      .nav-cta {
+        min-height: 40px;
+        padding: 0 14px;
+        font-size: 0.88rem;
+      }
+
+      .hero-metrics,
+      .feature-grid,
+      .screen-gallery,
+      .ai-capabilities,
+      .workflow,
+      .pricing,
+      .widget-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-spotlight {
+        border-radius: 32px;
+        padding: 24px;
+        margin-top: 12px;
+      }
+
+      .ai-copy h2,
+      .screens-intro h2 {
+        max-width: none;
+      }
+
+      .ai-device-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-screen {
+        min-height: 500px;
+      }
+
+      .screen-card {
+        min-height: auto;
+        border-radius: 30px;
+        padding: 22px;
+      }
+
+      .product-screen {
+        min-height: 440px;
+      }
+
+      .hero-art {
+        min-height: 560px;
+      }
+
+      .phone {
+        width: 325px;
+        left: 50%;
+        --phone-x: -50%;
+        --phone-rotate: -1deg;
+        --phone-rotate-float: -0.25deg;
+      }
+
+      .phone-screen {
+        min-height: 500px;
+        padding: 22px 18px;
+      }
+
+      .screen-title {
+        font-size: 2.15rem;
+      }
+
+      .donut-row {
+        gap: 12px;
+      }
+
+      .donut {
+        width: 88px;
+        height: 88px;
+      }
+
+      .ai-band,
+      .panel,
+      .pricing-intro,
+      .price-card,
+      .final-cta {
+        border-radius: 30px;
+        padding: 24px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+
+    /* Pocket brand pass: black, gray, white, soft glass, no generic blue SaaS treatment. */
+    .nav {
+      background: rgba(247, 247, 248, 0.76);
+      border-bottom-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .brand {
+      font-size: 1.08rem;
+      color: #0a0a0b;
+    }
+
+    .brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+      object-fit: cover;
+    }
+
+    .nav-links {
+      color: #5f6065;
+    }
+
+    .nav-cta,
+    .primary-cta {
+      background: linear-gradient(135deg, #050505, #2d2e31);
+      color: #fff;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.22);
+    }
+
+    .secondary-cta {
+      background: rgba(255, 255, 255, 0.86);
+      border-color: rgba(0, 0, 0, 0.12);
+      color: #101113;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.08);
+    }
+
+    .eyebrow {
+      color: #161719;
+      border-color: rgba(0, 0, 0, 0.12);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .eyebrow::before {
+      background: #151618;
+      box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.08);
+    }
+
+    .hero-copy,
+    .section-heading p,
+    .panel p,
+    .pricing-intro p,
+    .price-card p {
+      color: #686a70;
+    }
+
+    .metric,
+    .feature-card,
+    .screen-card,
+    .workflow-step,
+    .panel,
+    .pricing-intro,
+    .price-card {
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.1);
+    }
+
+    .phone {
+      background: linear-gradient(145deg, #040405, #202124);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 36px 100px rgba(0, 0, 0, 0.34);
+    }
+
+    .phone-screen {
+      background:
+        radial-gradient(circle at 14% 5%, rgba(255, 255, 255, 0.12), transparent 18rem),
+        linear-gradient(145deg, rgba(15, 16, 18, 0.96), rgba(25, 26, 29, 0.92));
+    }
+
+    .dash-card,
+    .breakdown-card,
+    .expense-list,
+    .chat-card,
+    .widget-card {
+      background: rgba(255, 255, 255, 0.095);
+      border-color: rgba(255, 255, 255, 0.13);
+    }
+
+    .dash-label,
+    .budget-line,
+    .widget-card small {
+      color: #d9dadd;
+    }
+
+    .donut {
+      background:
+        radial-gradient(circle at center, #151618 0 42%, transparent 43%),
+        conic-gradient(#f4f4f5 0 23%, #b9bbc0 23% 41%, #76777c 41% 57%, #3e3f43 57% 70%, #9ca3af 70% 100%);
+    }
+
+    .expense-icon,
+    .feature-icon {
+      background: rgba(0, 0, 0, 0.08);
+      color: #0d0d0f;
+    }
+
+    .feature-visual {
+      background:
+        radial-gradient(circle at 12% 8%, rgba(255, 255, 255, 0.92), transparent 9rem),
+        linear-gradient(145deg, rgba(247, 247, 248, 0.98), rgba(225, 226, 230, 0.74));
+    }
+
+    .ai-band,
+    .final-cta,
+    .price-card.featured {
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.1), transparent 24rem),
+        radial-gradient(circle at 86% 20%, rgba(160, 160, 166, 0.13), transparent 24rem),
+        linear-gradient(145deg, #050506, #18191c 72%, #0c0d0f);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 26px 90px rgba(0, 0, 0, 0.32);
+    }
+
+    .ai-band .eyebrow {
+      color: #f4f4f5 !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.14) !important;
+    }
+
+    .ai-pills span,
+    .bubble.user {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.13);
+    }
+
+    .bubble.pocket {
+      background: #f5f5f6;
+      color: #08090a;
+    }
+
+    .bubble.pocket small {
+      color: #686a70;
+    }
+
+    .map-row {
+      background: #f1f1f2;
+      border-color: rgba(0, 0, 0, 0.07);
+    }
+
+    .map-row span:last-child {
+      color: #0d0d0f;
+    }
+
+    .step-number {
+      background: #0b0b0d;
+    }
+
+    .check-list li::before {
+      background: #111113;
+    }
+
+    .metric,
+    .screen-card,
+    .workflow-step,
+    .panel,
+    .price-card,
+    .pricing-intro,
+    .final-cta,
+    .ai-band,
+    .ai-spotlight {
+      transition: transform 260ms ease, box-shadow 260ms ease, border-color 260ms ease;
+    }
+
+    .metric:hover,
+    .screen-card:hover,
+    .workflow-step:hover,
+    .panel:hover,
+    .price-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 86px rgba(0, 0, 0, 0.13);
+    }
+
+    .bubble {
+      opacity: 0;
+      animation: messagePop 560ms cubic-bezier(.2, .8, .2, 1) forwards;
+    }
+
+    .bubble:nth-child(2) {
+      animation-delay: 140ms;
+    }
+
+    .bubble:nth-child(3) {
+      animation-delay: 280ms;
+    }
+
+    .bubble:nth-child(4) {
+      animation-delay: 420ms;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity 700ms cubic-bezier(.2, .8, .2, 1) var(--reveal-delay, 0ms),
+        transform 700ms cubic-bezier(.2, .8, .2, 1) var(--reveal-delay, 0ms);
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal.is-visible.feature-card:hover {
+      transform: translateY(-7px);
+    }
+
+    .reveal.is-visible.metric:hover,
+    .reveal.is-visible.screen-card:hover,
+    .reveal.is-visible.workflow-step:hover,
+    .reveal.is-visible.panel:hover,
+    .reveal.is-visible.price-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .reveal.showcase-phone {
+      transform: translateY(28px) rotate(var(--showcase-angle, 0deg));
+    }
+
+    .reveal.is-visible.showcase-phone {
+      transform: rotate(var(--showcase-angle, 0deg));
+    }
+
+    .reveal.is-visible.showcase-phone:hover {
+      transform: rotate(0deg) translateY(-10px) scale(1.02);
+    }
+
+    .showcase-phone.primary {
+      --showcase-angle: -4deg;
+    }
+
+    .showcase-phone.secondary {
+      --showcase-angle: 4deg;
+    }
+
+    /* Scale pass: keep Pocket bold without letting desktop, tablet, or mobile feel oversized. */
+    .nav-inner,
+    .hero,
+    .section,
+    .screens-section,
+    .ai-spotlight,
+    .final-cta,
+    footer {
+      width: min(1120px, calc(100% - 48px));
+    }
+
+    .nav-inner {
+      min-height: 66px;
+    }
+
+    .brand {
+      font-size: 1rem;
+    }
+
+    .brand img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .nav-links {
+      gap: 18px;
+      font-size: 0.9rem;
+    }
+
+    .nav-cta,
+    .primary-cta,
+    .secondary-cta {
+      min-height: 42px;
+      padding: 0 16px;
+      font-size: 0.92rem;
+    }
+
+    .hero {
+      padding: 54px 0 40px;
+      grid-template-columns: minmax(0, 0.95fr) minmax(330px, 0.95fr);
+      gap: 36px;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 5.6vw, 4.7rem);
+      line-height: 0.94;
+      max-width: 12ch;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      font-size: clamp(1rem, 1.35vw, 1.16rem);
+      line-height: 1.5;
+    }
+
+    .hero-actions {
+      margin-top: 24px;
+    }
+
+    .hero-metrics {
+      margin-top: 26px;
+    }
+
+    .metric {
+      padding: 14px;
+      border-radius: 18px;
+    }
+
+    .metric strong {
+      font-size: 1.32rem;
+    }
+
+    .metric span {
+      font-size: 0.78rem;
+    }
+
+    .hero-art {
+      min-height: 610px;
+    }
+
+    .phone {
+      left: 18%;
+      width: min(390px, 68vw);
+      padding: 15px;
+      border-radius: 46px;
+    }
+
+    .phone::before {
+      border-radius: 39px;
+    }
+
+    .phone-screen {
+      min-height: 552px;
+      border-radius: 33px;
+      padding: 23px 19px;
+    }
+
+    .phone-top {
+      margin-bottom: 28px;
+      font-size: 0.8rem;
+    }
+
+    .screen-title {
+      font-size: 2.28rem;
+    }
+
+    .screen-date {
+      margin-bottom: 18px;
+      font-size: 0.88rem;
+    }
+
+    .dash-card {
+      border-radius: 20px;
+      padding: 13px;
+    }
+
+    .dash-label {
+      font-size: 0.66rem;
+    }
+
+    .dash-amount {
+      font-size: 1.28rem;
+    }
+
+    .breakdown-card,
+    .expense-list {
+      border-radius: 24px;
+      padding: 15px;
+    }
+
+    .breakdown-head h3,
+    .expense-list h3 {
+      font-size: 1rem;
+    }
+
+    .budget-line,
+    .legend-item {
+      font-size: 0.74rem;
+    }
+
+    .donut {
+      width: 96px;
+      height: 96px;
+    }
+
+    .expense-row {
+      grid-template-columns: 34px 1fr auto;
+      gap: 10px;
+      padding: 9px 0;
+    }
+
+    .expense-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 11px;
+    }
+
+    .expense-main strong,
+    .expense-price strong {
+      font-size: 0.86rem;
+    }
+
+    .expense-main span,
+    .expense-price span {
+      font-size: 0.7rem;
+    }
+
+    .section {
+      padding: 58px 0;
+    }
+
+    .section-heading h2,
+    .final-cta h2 {
+      font-size: clamp(1.9rem, 3.25vw, 3.15rem);
+      line-height: 1;
+    }
+
+    .section-heading p,
+    .final-cta p,
+    .screens-intro p,
+    .ai-copy p {
+      font-size: 0.98rem;
+    }
+
+    .feature-card {
+      min-height: 240px;
+      border-radius: 28px;
+      padding: 22px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.28rem;
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      margin-bottom: 20px;
+    }
+
+    .feature-visual {
+      min-height: 118px;
+      border-radius: 22px;
+      margin-top: 20px;
+    }
+
+    .ai-band {
+      border-radius: 38px;
+      padding: 30px;
+    }
+
+    .ai-band h2 {
+      font-size: clamp(2rem, 3.55vw, 3.35rem);
+      line-height: 0.98;
+    }
+
+    .workflow-step {
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .panel {
+      min-height: 380px;
+      border-radius: 32px;
+      padding: 24px;
+    }
+
+    .panel h2 {
+      font-size: clamp(1.8rem, 2.9vw, 2.65rem);
+      line-height: 1;
+    }
+
+    .ai-spotlight {
+      border-radius: 44px;
+      padding: 34px;
+      grid-template-columns: minmax(0, 0.88fr) minmax(330px, 1fr);
+      gap: 32px;
+    }
+
+    .ai-copy h2 {
+      font-size: clamp(2.3rem, 4.6vw, 4.1rem);
+      line-height: 0.94;
+      max-width: 10ch;
+    }
+
+    .mini-iphone {
+      width: min(280px, 100%);
+    }
+
+    .mini-screen {
+      min-height: 500px;
+      padding: 30px 16px 16px;
+    }
+
+    .ai-proof-card {
+      padding: 15px;
+      border-radius: 22px;
+    }
+
+    .ai-proof-card strong {
+      font-size: 1.12rem;
+    }
+
+    .screens-section {
+      padding: 36px 0;
+    }
+
+    .screens-intro h2 {
+      font-size: clamp(2rem, 3.45vw, 3.25rem);
+      line-height: 1;
+    }
+
+    .screen-card {
+      min-height: 585px;
+      border-radius: 34px;
+      padding: 20px;
+    }
+
+    .screen-card h3 {
+      font-size: 1.48rem;
+    }
+
+    .product-phone {
+      width: min(248px, 100%);
+      border-radius: 34px;
+    }
+
+    .product-screen {
+      min-height: 420px;
+      border-radius: 26px;
+      padding: 20px 14px;
+    }
+
+    .pricing-intro,
+    .price-card {
+      border-radius: 30px;
+      padding: 22px;
+    }
+
+    .pricing-intro h2,
+    .price-card h3 {
+      font-size: 1.65rem;
+    }
+
+    .price strong {
+      font-size: 2.65rem;
+    }
+
+    .final-cta {
+      padding: 38px;
+      border-radius: 38px;
+    }
+
+    @media (max-width: 980px) {
+      .nav-inner,
+      .hero,
+      .section,
+      .screens-section,
+      .ai-spotlight,
+      .final-cta,
+      footer {
+        width: min(100% - 40px, 1120px);
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 42px 0 28px;
+        gap: 30px;
+      }
+
+      h1 {
+        font-size: clamp(2.5rem, 8vw, 4.05rem);
+        max-width: 12ch;
+      }
+
+      .hero-copy {
+        max-width: 680px;
+      }
+
+      .hero-art {
+        min-height: 545px;
+      }
+
+      .phone {
+        left: 50%;
+        width: min(370px, 74vw);
+        --phone-x: -50%;
+      }
+
+      .phone-screen {
+        min-height: 518px;
+      }
+
+      .section {
+        padding: 48px 0;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+      }
+
+      .section-heading,
+      .ai-band,
+      .ai-spotlight,
+      .screens-intro,
+      .split,
+      .final-cta {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid,
+      .screen-gallery,
+      .workflow,
+      .pricing {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .ai-spotlight {
+        gap: 28px;
+        padding: 30px;
+      }
+
+      .ai-copy h2 {
+        font-size: clamp(2.15rem, 7.2vw, 3.45rem);
+        max-width: 12ch;
+      }
+
+      .ai-device-wrap {
+        grid-template-columns: minmax(230px, 0.62fr) minmax(0, 1fr);
+      }
+
+      .screen-card {
+        min-height: 540px;
+      }
+
+      .pricing-intro {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .nav-inner,
+      .hero,
+      .section,
+      .screens-section,
+      .ai-spotlight,
+      .final-cta,
+      footer {
+        width: calc(100% - 28px);
+      }
+
+      .nav-inner {
+        width: auto;
+        max-width: none;
+        margin: 0;
+        padding: 0 14px;
+        min-height: 60px;
+        gap: 12px;
+      }
+
+      .brand {
+        font-size: 0.95rem;
+        flex: 0 0 auto;
+      }
+
+      .brand img {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+      }
+
+      .nav-cta,
+      .primary-cta,
+      .secondary-cta {
+        min-height: 38px;
+        padding: 0 12px;
+        font-size: 0.84rem;
+        white-space: nowrap;
+      }
+
+      .nav-cta {
+        margin-left: auto;
+        flex: 0 0 auto;
+      }
+
+      #ai,
+      #features,
+      #workflow,
+      #pricing {
+        scroll-margin-top: 76px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 34px 0 20px;
+        gap: 22px;
+      }
+
+      .eyebrow {
+        height: 32px;
+        padding: 0 11px;
+        font-size: 0.76rem;
+      }
+
+      h1 {
+        margin: 18px 0 14px;
+        font-size: clamp(2.35rem, 12vw, 3.15rem);
+        line-height: 0.98;
+        max-width: 9.8ch;
+      }
+
+      .hero-copy {
+        max-width: 100%;
+        font-size: 1rem;
+        line-height: 1.45;
+        overflow-wrap: break-word;
+      }
+
+      .hero-actions {
+        margin-top: 20px;
+      }
+
+      .hero-metrics,
+      .feature-grid,
+      .screen-gallery,
+      .ai-capabilities,
+      .workflow,
+      .pricing,
+      .widget-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 22px;
+      }
+
+      .hero-metrics .metric:last-child {
+        grid-column: 1 / -1;
+      }
+
+      .metric {
+        padding: 12px 10px;
+        border-radius: 16px;
+      }
+
+      .metric strong {
+        font-size: 1.08rem;
+      }
+
+      .metric span {
+        font-size: 0.68rem;
+        line-height: 1.18;
+      }
+
+      .hero-art {
+        width: 100%;
+        min-height: 470px;
+        overflow: hidden;
+      }
+
+      .phone {
+        left: 50%;
+        width: min(300px, calc(100vw - 68px));
+        padding: 12px;
+        border-radius: 40px;
+        --phone-x: -50%;
+        --phone-rotate: -1deg;
+        --phone-rotate-float: -0.25deg;
+      }
+
+      .phone::before {
+        inset: 8px;
+        border-radius: 34px;
+      }
+
+      .phone-screen {
+        min-height: 452px;
+        border-radius: 29px;
+        padding: 18px 14px;
+      }
+
+      .phone-top {
+        margin-bottom: 21px;
+        font-size: 0.74rem;
+      }
+
+      .status-pill {
+        height: 24px;
+        padding: 0 8px;
+      }
+
+      .screen-title {
+        font-size: 1.85rem;
+      }
+
+      .screen-date {
+        margin-bottom: 14px;
+        font-size: 0.78rem;
+      }
+
+      .dash-grid {
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .dash-card {
+        border-radius: 16px;
+        padding: 10px;
+      }
+
+      .dash-label {
+        font-size: 0.56rem;
+        margin-bottom: 6px;
+      }
+
+      .dash-amount {
+        font-size: 1rem;
+      }
+
+      .breakdown-card,
+      .expense-list {
+        border-radius: 20px;
+        padding: 12px;
+      }
+
+      .breakdown-head {
+        margin-bottom: 10px;
+      }
+
+      .breakdown-head h3,
+      .expense-list h3 {
+        font-size: 0.86rem;
+      }
+
+      .budget-line {
+        font-size: 0.64rem;
+      }
+
+      .donut-row {
+        gap: 9px;
+      }
+
+      .donut {
+        width: 74px;
+        height: 74px;
+        box-shadow: inset 0 0 0 7px rgba(255, 255, 255, 0.04);
+      }
+
+      .donut strong {
+        font-size: 0.92rem;
+      }
+
+      .donut small,
+      .legend-item,
+      .expense-main span,
+      .expense-price span {
+        font-size: 0.62rem;
+      }
+
+      .legend {
+        gap: 6px;
+      }
+
+      .expense-row {
+        grid-template-columns: 30px 1fr auto;
+        gap: 8px;
+        padding: 8px 0;
+      }
+
+      .expense-icon {
+        width: 30px;
+        height: 30px;
+      }
+
+      .expense-main strong,
+      .expense-price strong {
+        font-size: 0.74rem;
+      }
+
+      .section {
+        padding: 40px 0;
+      }
+
+      .section-heading {
+        display: block;
+        margin-bottom: 20px;
+      }
+
+      .section-heading h2,
+      .screens-intro h2,
+      .final-cta h2 {
+        font-size: clamp(1.75rem, 9.4vw, 2.45rem);
+        line-height: 1.02;
+      }
+
+      .section-heading p,
+      .screens-intro p,
+      .final-cta p,
+      .panel p,
+      .pricing-intro p,
+      .price-card p,
+      .ai-copy p {
+        margin-top: 12px;
+        font-size: 0.95rem;
+      }
+
+      .feature-card,
+      .panel,
+      .pricing-intro,
+      .price-card,
+      .final-cta {
+        border-radius: 26px;
+        padding: 20px;
+      }
+
+      .feature-card {
+        min-height: auto;
+      }
+
+      .feature-visual {
+        min-height: 104px;
+      }
+
+      .ai-band {
+        border-radius: 28px;
+        padding: 22px;
+      }
+
+      .ai-band h2,
+      .panel h2 {
+        font-size: clamp(1.7rem, 9vw, 2.35rem);
+        line-height: 1.02;
+      }
+
+      .ai-spotlight {
+        border-radius: 28px;
+        padding: 22px;
+        gap: 22px;
+      }
+
+      .ai-copy h2 {
+        font-size: clamp(1.85rem, 10.6vw, 2.7rem);
+        line-height: 0.98;
+      }
+
+      .ai-device-wrap {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+
+      .mini-iphone {
+        width: min(258px, 100%);
+      }
+
+      .mini-screen {
+        min-height: 430px;
+      }
+
+      .ai-proof-stack {
+        gap: 10px;
+      }
+
+      .screens-section {
+        padding: 32px 0;
+      }
+
+      .screens-intro {
+        display: block;
+        margin-bottom: 18px;
+      }
+
+      .screen-card {
+        min-height: auto;
+        border-radius: 28px;
+        padding: 18px;
+      }
+
+      .product-phone {
+        width: min(230px, 100%);
+      }
+
+      .product-screen {
+        min-height: 382px;
+        padding: 18px 13px;
+      }
+
+      .mock-title {
+        font-size: 1.28rem;
+      }
+
+      .split {
+        gap: 14px;
+      }
+
+      .panel {
+        min-height: auto;
+      }
+
+      .price strong {
+        font-size: 2.35rem;
+      }
+
+      footer {
+        flex-direction: column;
+        padding: 24px 0 36px;
+      }
+    }
+
+    /* Keep the real app screenshot frame inside the hero's layout box. */
+    .hero-art {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+      padding: 8px 0 26px;
+      overflow: visible;
+    }
+
+    .hero-art .phone {
+      position: relative;
+      top: auto;
+      left: auto;
+      width: clamp(330px, 31vw, 390px);
+      margin: 0 auto;
+      --phone-x: 0;
+    }
+
+    @media (max-width: 980px) {
+      .hero-art {
+        padding-bottom: 28px;
+      }
+
+      .hero-art .phone {
+        width: min(370px, 74vw);
+      }
+
+      .hero-float-one {
+        left: 5%;
+        top: 6%;
+      }
+
+      .hero-float-two {
+        right: 5%;
+        top: 34%;
+      }
+
+      .hero-float-three {
+        left: 8%;
+        bottom: 8%;
+      }
+
+      .showcase {
+        padding-top: 66px;
+      }
+
+      .showcase-shell {
+        border-radius: 42px;
+        padding: 32px;
+      }
+
+      .showcase-heading,
+      .showcase-stage {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase-heading {
+        margin-bottom: 24px;
+      }
+
+      .showcase-phones {
+        min-height: 560px;
+      }
+
+      .showcase-phone {
+        width: min(280px, 45%);
+      }
+
+      .showcase-phone.primary {
+        left: 8%;
+      }
+
+      .showcase-phone.secondary {
+        right: 9%;
+      }
+
+      .showcase-card {
+        left: 50%;
+        top: 42%;
+        transform: translateX(-50%) translate3d(0, var(--parallax-y, 0), 0);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero {
+        padding-bottom: 34px;
+      }
+
+      .hero-art {
+        padding-bottom: 18px;
+      }
+
+      .hero-art .phone {
+        width: min(300px, calc(100vw - 68px));
+      }
+
+      .hero::before,
+      .hero-float-card {
+        display: none;
+      }
+
+      .signal-strip {
+        width: calc(100% - 28px);
+        padding-bottom: 12px;
+      }
+
+      .signal-track {
+        animation-duration: 25s;
+      }
+
+      .signal-item {
+        min-height: 40px;
+        padding: 0 13px;
+        font-size: 0.84rem;
+      }
+
+      .showcase {
+        width: calc(100% - 28px);
+        padding: 48px 0 12px;
+      }
+
+      .showcase-shell {
+        border-radius: 30px;
+        padding: 22px;
+      }
+
+      .showcase-shell::before {
+        inset: 12px;
+        border-radius: 22px;
+      }
+
+      .showcase-heading {
+        display: block;
+      }
+
+      .showcase-heading h2 {
+        font-size: clamp(1.85rem, 10vw, 2.6rem);
+        line-height: 1.02;
+      }
+
+      .showcase-heading p {
+        margin-top: 12px;
+        font-size: 0.95rem;
+      }
+
+      .journey-rail {
+        padding-left: 18px;
+      }
+
+      .journey-step {
+        border-radius: 22px;
+        padding: 16px;
+      }
+
+      .journey-step h3 {
+        font-size: 1.1rem;
+      }
+
+      .journey-step p {
+        font-size: 0.9rem;
+      }
+
+      .showcase-phones {
+        min-height: 500px;
+        overflow: hidden;
+      }
+
+      .showcase-phone {
+        width: min(212px, 56%);
+        border-radius: 34px;
+        padding: 10px;
+      }
+
+      .showcase-phone-screen {
+        border-radius: 25px;
+      }
+
+      .showcase-phone.primary {
+        left: 0;
+        top: 10px;
+      }
+
+      .showcase-phone.secondary {
+        right: -2px;
+        bottom: 8px;
+      }
+
+      .showcase-card {
+        left: 50%;
+        top: 44%;
+        width: min(260px, 86%);
+        padding: 15px;
+        border-radius: 22px;
+      }
+
+      .showcase-card strong {
+        font-size: 1.08rem;
+      }
+    }
+
+    /* Feature intro spacing: center the copy and give the phone cards room to breathe. */
+    #features.screens-section {
+      padding-top: 150px;
+    }
+
+    #features .screens-intro {
+      display: block;
+      max-width: 920px;
+      margin: 0 auto 75px;
+      text-align: center;
+    }
+
+    #features .screens-intro h2 {
+      max-width: none;
+      margin: 0 auto;
+    }
+
+    #features .screens-intro p {
+      max-width: 720px;
+      margin: 20px auto 0;
+      text-align: center;
+    }
+
+    #features + .section {
+      padding-top: 124px;
+    }
+
+    @media (max-width: 760px) {
+      #features.screens-section {
+        padding-top: 130px;
+      }
+
+      #features .screens-intro {
+        margin-bottom: 75px;
+      }
+
+      #features + .section {
+        padding-top: 104px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="site-texture" aria-hidden="true"></div>
+  <div class="page">
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="Pocket home">
+          <img src="assets/pocket-app-icon.png" alt="">
+          <span>Pocket</span>
+        </a>
+        <nav class="nav-links" aria-label="Main navigation">
+          <a href="#ai">Pocket AI</a>
+          <a href="#features">Features</a>
+          <a href="#workflow">How it works</a>
+          <a href="#pricing">Pricing</a>
+        </nav>
+        <a class="nav-cta" href="#pricing">Get Pocket</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <div class="eyebrow">Expense tracking built for real life</div>
+          <h1 id="hero-title">Your money, in your Pocket.</h1>
+          <p class="hero-copy">Pocket is the clean expense tracker for logging spending, managing subscriptions, importing CSVs, checking widgets, and understanding where your money went.</p>
+          <div class="hero-actions">
+            <a class="primary-cta" href="#ai">See Pocket AI</a>
+            <a class="secondary-cta" href="#features">Explore the app</a>
+          </div>
+          <div class="hero-metrics" aria-label="Pocket highlights">
+            <div class="metric"><strong>20</strong><span>free expenses to start</span></div>
+            <div class="metric"><strong>50</strong><span>recent expenses visible</span></div>
+            <div class="metric"><strong>4</strong><span>small home widgets</span></div>
+          </div>
+        </div>
+
+        <div class="hero-art" aria-label="Pocket app preview">
+          <div class="phone real-phone">
+            <div class="phone-screen">
+              <img class="phone-screenshot" src="assets/pocket-home-xcode.jpg" alt="Pocket dashboard with today's spending, weekly spending, spending breakdown, and upcoming subscriptions.">
+            </div>
+          </div>
+          <div class="hero-float-card hero-float-one" data-parallax="0.08" aria-hidden="true">
+            <span>Today</span>
+            <strong>$197.00 logged</strong>
+            <small>Fresh expense data, no waiting.</small>
+          </div>
+          <div class="hero-float-card hero-float-two" data-parallax="-0.06" aria-hidden="true">
+            <span>Pocket AI</span>
+            <strong>Wolt added</strong>
+            <small>$24.50 · Food · Today</small>
+          </div>
+          <div class="hero-float-card hero-float-three" data-parallax="0.12" aria-hidden="true">
+            <span>Next up</span>
+            <strong>Netflix · $12</strong>
+            <small>Subscription stays separate.</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="signal-strip" aria-label="Pocket feature highlights">
+        <div class="signal-track">
+          <span class="signal-item">Message expenses</span>
+          <span class="signal-item">Manual entry</span>
+          <span class="signal-item">CSV mapping</span>
+          <span class="signal-item">Shared spaces</span>
+          <span class="signal-item">Widgets</span>
+          <span class="signal-item">Subscriptions</span>
+          <span class="signal-item">Analytics</span>
+          <span class="signal-item">Budget clarity</span>
+          <span class="signal-item">Message expenses</span>
+          <span class="signal-item">Manual entry</span>
+          <span class="signal-item">CSV mapping</span>
+          <span class="signal-item">Shared spaces</span>
+          <span class="signal-item">Widgets</span>
+          <span class="signal-item">Subscriptions</span>
+          <span class="signal-item">Analytics</span>
+          <span class="signal-item">Budget clarity</span>
+        </div>
+      </section>
+
+      <section id="ai" class="ai-spotlight">
+        <div class="ai-copy">
+          <div class="eyebrow" style="background:rgba(255,255,255,.08);color:#f4f4f5;border-color:rgba(255,255,255,.12)">Pocket AI add-on</div>
+          <h2>Text Pocket. It handles the expense.</h2>
+          <p>Pocket AI gets its own premium lane. Users can message expenses throughout the day, ask for edits, get summaries, and feel like they are talking to a finance assistant with personality.</p>
+          <div class="ai-capabilities">
+            <span>Add expenses from Messages</span>
+            <span>Edit or delete by texting</span>
+            <span>Daily, weekly, monthly recaps</span>
+            <span>Human-feeling replies and reactions</span>
+          </div>
+        </div>
+
+        <div class="ai-device-wrap" aria-label="Pocket AI iPhone preview">
+          <div class="mini-iphone screenshot-phone">
+            <div class="mini-screen">
+              <img class="phone-screenshot" src="assets/pocket-ai-xcode.jpg" alt="Pocket AI add-on screen explaining message-based expense capture and summaries.">
+            </div>
+          </div>
+
+          <div class="ai-proof-stack">
+            <div class="ai-proof-card" data-parallax="0.06">
+              <small>Capture</small>
+              <strong>"Spent $24.50 at Wolt today."</strong>
+            </div>
+            <div class="ai-proof-card" data-parallax="-0.04">
+              <small>Summarize</small>
+              <strong>"What changed this week?"</strong>
+            </div>
+            <div class="ai-proof-card" data-parallax="0.05">
+              <small>React</small>
+              <strong>Fast replies that feel personal.</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="showcase" aria-labelledby="showcase-title">
+        <div class="showcase-shell">
+          <div class="showcase-heading">
+            <h2 id="showcase-title">From quick message to monthly clarity.</h2>
+            <p>Pocket should feel alive: capture the spend, sort the details, update the dashboard, and turn the month into something users can actually act on.</p>
+          </div>
+
+          <div class="showcase-stage">
+            <div class="journey-rail" aria-label="Pocket AI workflow">
+              <article class="journey-step">
+                <small>01 · Capture</small>
+                <h3>Text like a normal person.</h3>
+                <p>“Add Wolt for $24.50 today” becomes a clean expense with date, amount, and tag.</p>
+              </article>
+              <article class="journey-step">
+                <small>02 · Correct</small>
+                <h3>Edit without opening the app.</h3>
+                <p>Users can say “make that yesterday” or “move it to Food” and Pocket keeps the record tidy.</p>
+              </article>
+              <article class="journey-step">
+                <small>03 · Understand</small>
+                <h3>Ask for the story behind the spend.</h3>
+                <p>Daily, weekly, and monthly summaries explain what changed and where to save next.</p>
+              </article>
+            </div>
+
+            <div class="showcase-phones" aria-hidden="true">
+              <div class="showcase-phone primary">
+                <div class="showcase-phone-screen">
+                  <img class="phone-screenshot" src="assets/pocket-ai-xcode.jpg" alt="">
+                </div>
+              </div>
+              <div class="showcase-phone secondary">
+                <div class="showcase-phone-screen">
+                  <img class="phone-screenshot" src="assets/pocket-home-xcode.jpg" alt="">
+                </div>
+              </div>
+              <div class="showcase-card" data-parallax="-0.09">
+                <small>Live result</small>
+                <strong>Dashboard updated before the receipt gets cold.</strong>
+                <span>AI capture and manual entry land in the same Pocket expense system.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="screens-section">
+        <div class="screens-intro">
+          <h2>Prefer typing it in? Pocket still feels fast.</h2>
+          <p>Pocket AI is the headline feature, but the app still works beautifully when users want manual expense entry, imports, widgets, subscriptions, and analytics.</p>
+        </div>
+
+        <div class="screen-gallery">
+          <article class="screen-card">
+            <div>
+              <h3>Create expenses fast</h3>
+              <p>The plus button goes straight into the expense sheet, with the fields people actually need.</p>
+            </div>
+            <div class="product-phone screenshot-phone" style="--angle:-2deg" aria-hidden="true">
+              <div class="product-screen">
+                <img class="phone-screenshot" src="assets/pocket-create-xcode.jpg" alt="">
+              </div>
+            </div>
+          </article>
+
+          <article class="screen-card">
+            <div>
+              <h3>Real widget designs</h3>
+              <p>Small widgets mirror the app: spent today, this week, this month, and upcoming subscriptions.</p>
+            </div>
+            <div class="product-phone screenshot-phone" style="--angle:1.5deg" aria-hidden="true">
+              <div class="product-screen dark">
+                <img class="phone-screenshot" src="assets/pocket-home-xcode.jpg" alt="">
+              </div>
+            </div>
+          </article>
+
+          <article class="screen-card">
+            <div>
+              <h3>Invite others to your space</h3>
+              <p>Track expenses together in one shared Pocket space, so everyone can add spending and stay on the same page.</p>
+            </div>
+            <div class="product-phone screenshot-phone" style="--angle:-1deg" aria-hidden="true">
+              <div class="product-screen">
+                <img class="phone-screenshot" src="assets/pocket-share-xcode.jpg" alt="">
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>Everything else still feels native to Pocket.</h2>
+          <p>The feature set underneath AI stays focused on the real product: clear dashboards, importing, subscriptions, widgets, shared spaces, and Pro upgrades.</p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <div class="feature-icon">Aa</div>
+            <h3>Manual expenses that stay instant</h3>
+            <p>Create one expense and immediately add the next without waiting on a toast or extra menu.</p>
+            <div class="feature-visual create-visual" aria-hidden="true">
+              <div class="visual-topline"><span>New expense</span><strong>$50.00</strong></div>
+              <div class="visual-field"><span>Name</span><strong>Wolt</strong></div>
+              <div class="visual-field"><span>Tag</span><strong>Food</strong></div>
+            </div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">▦</div>
+            <h3>CSV import with clear mapping</h3>
+            <p>Map only the CSV headers you choose to Pocket fields like name and amount, then import the batch.</p>
+            <div class="feature-visual mapping-visual" aria-hidden="true">
+              <div class="visual-row"><span>Expense Name<br><small>CSV column</small></span><span class="visual-pill">Name</span></div>
+              <div class="visual-row"><span>Cost<br><small>CSV column</small></span><span class="visual-pill">Amount</span></div>
+              <div class="visual-row"><span>3 rows ready</span><span class="visual-pill">Import</span></div>
+            </div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">↻</div>
+            <h3>Subscriptions handled properly</h3>
+            <p>Weekly, monthly, and yearly recurring expenses stay separate from regular recent expenses.</p>
+            <div class="feature-visual subscription-visual" aria-hidden="true">
+              <div class="sub-card">
+                <span>Upcoming</span>
+                <strong>Netflix · $12</strong>
+                <small>Next charge Aug 6</small>
+              </div>
+              <div class="cycle-row"><span>Weekly</span><span class="active">Monthly</span><span>Yearly</span></div>
+            </div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">◌</div>
+            <h3>Liquid glass dashboards</h3>
+            <p>Today, week, month, and category views use the same soft glass cards and bold type from the app.</p>
+            <div class="feature-visual dashboard-visual" aria-hidden="true">
+              <div class="mini-tabs"><span>Today</span><span class="active">Month</span></div>
+              <div class="mini-dashboard-body">
+                <div class="tiny-donut"></div>
+                <div class="tiny-legend">
+                  <span>Bills <b>$1,026</b></span>
+                  <span>Food <b>$733</b></span>
+                  <span>Other <b>$480</b></span>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">⌘</div>
+            <h3>Widgets for quick checks</h3>
+            <p>Small widgets keep the numbers users check most visible outside the app.</p>
+            <div class="feature-visual widget-visual" aria-hidden="true">
+              <div class="tiny-widget"><small>Today</small><strong>$197</strong></div>
+              <div class="tiny-widget"><small>Week</small><strong>$1,890</strong></div>
+              <div class="tiny-widget"><small>Month</small><strong>$3,287</strong></div>
+              <div class="tiny-widget"><small>Next</small><strong>$12</strong></div>
+            </div>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon">↗</div>
+            <h3>Share your Pocket space</h3>
+            <p>Invite others into your space and track expenses together without everyone keeping separate lists.</p>
+            <div class="feature-visual share-visual" aria-hidden="true">
+              <div class="share-status"><span>Workspace</span><strong class="share-badge">Invite sent</strong></div>
+              <div class="share-member-row">
+                <span class="share-avatar">AJ</span>
+                <span>Aj Picard<small>Owner</small></span>
+                <span>Active</span>
+              </div>
+              <div class="share-member-row">
+                <span class="share-avatar">LP</span>
+                <span>Lex Parker<small>Member</small></span>
+                <span>Joined</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="workflow" class="section">
+        <div class="section-heading">
+          <h2>Everything rolls into the same Pocket loop.</h2>
+          <p>Whether users text Pocket AI, create manually, or import a CSV, the app organizes everything into the same expenses, tags, subscriptions, widgets, and summaries.</p>
+        </div>
+        <div class="workflow">
+          <article class="workflow-step">
+            <div class="step-number">1</div>
+            <h3>Capture it</h3>
+            <p>Text Pocket AI, create an expense manually, or import a CSV when there are a bunch at once.</p>
+          </article>
+          <article class="workflow-step">
+            <div class="step-number">2</div>
+            <h3>Tag it</h3>
+            <p>Use your tags, let imported expenses fall into Imported, or keep subscriptions separate.</p>
+          </article>
+          <article class="workflow-step">
+            <div class="step-number">3</div>
+            <h3>Review it</h3>
+            <p>Tap dashboard cards to inspect the exact expenses behind today, week, month, or category totals.</p>
+          </article>
+          <article class="workflow-step">
+            <div class="step-number">4</div>
+            <h3>Act on it</h3>
+            <p>Set budgets, view analytics, share with others, and ask AI for the plain-English read.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="split">
+          <article class="panel">
+            <h2>Imports without mystery.</h2>
+            <p>Users map the CSV headers they see to the Pocket fields they need. No fake preview cards, no hidden assumptions, no import button until required fields are ready.</p>
+            <div class="import-table">
+              <div class="map-row"><span>CSV column</span><span>Pocket field</span></div>
+              <div class="map-row"><span>Expense Name</span><span>Name</span></div>
+              <div class="map-row"><span>Cost</span><span>Amount</span></div>
+              <div class="map-row"><span>Optional column</span><span>Select field</span></div>
+            </div>
+          </article>
+
+          <article class="panel dark">
+            <h2>Widgets that answer fast.</h2>
+            <p>Small widgets give users the numbers they check most often, without reopening the app.</p>
+            <div class="widget-grid">
+              <div class="widget-card"><small>Today</small><strong>$197</strong></div>
+              <div class="widget-card"><small>This Week</small><strong>$1,890</strong></div>
+              <div class="widget-card"><small>This Month</small><strong>$3,287</strong></div>
+              <div class="widget-card"><small>Upcoming</small><strong>Netflix · $12</strong></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="pricing" class="section">
+        <div class="pricing">
+          <div class="pricing-intro">
+            <h2>Simple plans, clear upgrades.</h2>
+            <p>Pocket Pro handles the app’s premium features. Pocket AI stays separate because messaging and AI have real recurring costs.</p>
+          </div>
+          <article class="price-card">
+            <h3>Pocket Pro</h3>
+            <p>For people who want unlimited tracking, analytics, budgets, sharing, imports, and widgets.</p>
+            <div class="price"><strong>$39.99</strong><span>/year</span></div>
+            <ul class="check-list">
+              <li>Unlimited expenses and tags</li>
+              <li>Budgets and analytics</li>
+              <li>CSV import and export</li>
+              <li>Shared lists and collaboration</li>
+            </ul>
+          </article>
+          <article class="price-card featured">
+            <h3>Pocket AI</h3>
+            <p>For Pro users who want to message Pocket to add expenses and ask for summaries.</p>
+            <div class="price"><strong>$9.99</strong><span>/month</span></div>
+            <ul class="check-list">
+              <li>Apple Messages expense capture</li>
+              <li>Human-feeling replies and reactions</li>
+              <li>Edits, deletes, summaries, and nudges</li>
+              <li>Monthly and annual plans only</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div>
+          <h2>Pocket should feel like the fastest way to stay honest with your money.</h2>
+          <p>Track spending, clean up subscriptions, understand the month, and get ready for a messaging assistant that feels personal instead of robotic.</p>
+        </div>
+        <a class="primary-cta" href="#top">Back to top</a>
+      </section>
+    </main>
+
+  <footer>
+      <span>© 2026 Pocket by Sauce Designs</span>
+      <span>Expense tracking, widgets, imports, analytics, and Pocket AI.</span>
+    </footer>
+  </div>
+  <script>
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const progressBar = document.querySelector(".scroll-progress span");
+    const parallaxItems = document.querySelectorAll("[data-parallax]");
+    const revealItems = document.querySelectorAll(
+      ".metric, .signal-strip, .ai-spotlight, .showcase-shell, .journey-step, .showcase-phone, .feature-card, .screen-card, .workflow-step, .panel, .pricing-intro, .price-card, .final-cta, footer"
+    );
+
+    revealItems.forEach((item, index) => {
+      item.classList.add("reveal");
+      item.style.setProperty("--reveal-delay", `${Math.min(index * 45, 220)}ms`);
+    });
+
+    const updateScrollEffects = () => {
+      const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, Math.max(0, window.scrollY / scrollable));
+
+      if (progressBar) {
+        progressBar.style.transform = `scaleX(${progress})`;
+      }
+
+      if (prefersReducedMotion) {
+        return;
+      }
+
+      const viewportCenter = window.innerHeight / 2;
+      parallaxItems.forEach((item) => {
+        const strength = Number(item.dataset.parallax || 0);
+        const rect = item.getBoundingClientRect();
+        const itemCenter = rect.top + rect.height / 2;
+        const offset = (viewportCenter - itemCenter) * strength;
+        item.style.setProperty("--parallax-y", `${Math.max(-28, Math.min(28, offset))}px`);
+      });
+    };
+
+    updateScrollEffects();
+    window.addEventListener("scroll", updateScrollEffects, { passive: true });
+    window.addEventListener("resize", updateScrollEffects);
+
+    const revealVisibleItems = () => {
+      revealItems.forEach((item) => {
+        if (item.classList.contains("is-visible")) {
+          return;
+        }
+
+        const rect = item.getBoundingClientRect();
+        const inView = rect.top < window.innerHeight * 0.92 && rect.bottom > window.innerHeight * -0.08;
+        if (inView) {
+          item.classList.add("is-visible");
+        }
+      });
+    };
+
+    if ("IntersectionObserver" in window) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            updateScrollEffects();
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.16 });
+
+      revealItems.forEach((item) => revealObserver.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    }
+
+    requestAnimationFrame(revealVisibleItems);
+    window.addEventListener("load", revealVisibleItems);
+    window.addEventListener("resize", revealVisibleItems);
+    window.addEventListener("scroll", revealVisibleItems, { passive: true });
+    window.addEventListener("hashchange", () => {
+      window.setTimeout(revealVisibleItems, 120);
+    });
+  </script>
+</body>
+</html>
