@@ -201,20 +201,28 @@ setMotion(motionOff);
  updatePrize();
 })();
 
-// The hidden reward moves from the hero to the app shelf after five visible seconds.
+// The reward visits the app orbit, the title's period, then the app shelf.
 (() => {
  const heroSurprise = $('.orbit-surprise');
+ const titleSurprise = $('.title-surprise');
+ const period = $('.period');
  const shelfSurprise = $('.shelf-surprise');
  const shelfHeading = $('.shelf-heading');
  const sheet = $('#surprise-sheet');
- if (!heroSurprise || !shelfSurprise || !shelfHeading || !sheet) return;
- let started = false, moved = false, leaving = false, arrived = false, hovered = false;
+ if (!heroSurprise || !titleSurprise || !period || !shelfSurprise || !shelfHeading || !sheet) return;
+ const stops = [heroSurprise, titleSurprise];
+ let stop = 0, started = false, leaving = false, arrived = false, hovered = null;
  let remaining = 5000, clockStarted = null, clockTimer = 0, poofTimer = 0;
+ const activeButton = () => stops[stop];
  const inViewport = element => {
   const rect = element.getBoundingClientRect();
   return rect.bottom > 0 && rect.top < innerHeight && rect.right > 0 && rect.left < innerWidth;
  };
- const interactionPaused = () => document.hidden || hovered || heroSurprise.contains(document.activeElement) || sheet.open;
+ const interactionPaused = () => document.hidden || hovered === activeButton() || activeButton()?.contains(document.activeElement) || sheet.open;
+ const canShowTitle = () => {
+  const style = getComputedStyle(intro);
+  return hero.getBoundingClientRect().bottom > 0 && inViewport(period) && style.visibility !== 'hidden' && Number(style.opacity) > .25;
+ };
 
  function pauseClock(){
   if (clockStarted !== null) remaining = Math.max(0, remaining - (performance.now() - clockStarted));
@@ -223,44 +231,67 @@ setMotion(motionOff);
   clockTimer = 0;
  }
  function revealShelf(){
-  if (!moved || arrived || document.hidden || !inViewport(shelfSurprise)) return;
+  if (stop !== stops.length || arrived || document.hidden || !inViewport(shelfSurprise)) return;
   arrived = true;
   if (!motionOff) shelfSurprise.classList.add('surprise-arriving');
   observer?.disconnect();
+ }
+ function showShelf(){
+  pauseClock();
+  clearTimeout(poofTimer);
+  stops.forEach(button => {
+   button.hidden = true;
+   button.classList.remove('surprise-leaving', 'surprise-arriving');
+  });
+  period.classList.remove('is-surprise-active');
+  stop = stops.length;
+  leaving = false;
+  hovered = null;
+  shelfSurprise.hidden = false;
+  revealShelf();
  }
  function finishMove(){
   if (interactionPaused()) { syncSurprise(); return; }
   pauseClock();
   clearTimeout(poofTimer);
-  moved = true;
+  const previous = activeButton();
+  previous.hidden = true;
+  previous.classList.remove('surprise-leaving', 'surprise-arriving');
   leaving = false;
-  heroSurprise.hidden = true;
-  heroSurprise.classList.remove('surprise-leaving');
-  shelfSurprise.hidden = false;
-  observer?.unobserve(heroSurprise);
-  revealShelf();
+  hovered = null;
+  // Skip the title if scrolling has already carried it out of view.
+  if (stop === 0 && canShowTitle()) {
+   stop = 1;
+   started = true;
+   remaining = 5000;
+   period.classList.add('is-surprise-active');
+   titleSurprise.hidden = false;
+   if (!motionOff) titleSurprise.classList.add('surprise-arriving');
+   syncSurprise();
+  } else showShelf();
  }
  function beginPoof(){
   pauseClock();
   if (interactionPaused()) return;
-  if (motionOff || !inViewport(heroSurprise)) { finishMove(); return; }
+  if (motionOff || !inViewport(activeButton()) || (stop === 1 && !canShowTitle())) { finishMove(); return; }
   leaving = true;
-  heroSurprise.classList.add('surprise-leaving');
+  activeButton().classList.remove('surprise-arriving');
+  activeButton().classList.add('surprise-leaving');
   poofTimer = setTimeout(finishMove, 600);
  }
  function syncSurprise(){
-  if (moved) { revealShelf(); return; }
+  if (stop === stops.length) { revealShelf(); return; }
   if (interactionPaused()) {
    pauseClock();
    if (leaving) {
     clearTimeout(poofTimer);
     leaving = false;
-    heroSurprise.classList.remove('surprise-leaving');
+    activeButton().classList.remove('surprise-leaving');
    }
    return;
   }
-  // Visitors opening a link farther down the page can still discover the reward.
-  if (!started && hero.getBoundingClientRect().bottom <= 0) { finishMove(); return; }
+  // Direct links below the hero still lead to a discoverable reward.
+  if (!started && hero.getBoundingClientRect().bottom <= 0) { showShelf(); return; }
   if (!started) {
    if (!inViewport(heroSurprise) || document.body.classList.contains('hero-entering')) return;
    started = true;
@@ -277,17 +308,20 @@ setMotion(motionOff);
 
  const observer = 'IntersectionObserver' in window ? new IntersectionObserver(syncSurprise, {threshold:.1}) : null;
  observer?.observe(heroSurprise);
+ observer?.observe(period);
  observer?.observe(shelfHeading);
- heroSurprise.addEventListener('pointerenter', event => {
-  if (event.pointerType === 'touch') return;
-  hovered = true;
-  syncSurprise();
+ stops.forEach(button => {
+  button.addEventListener('pointerenter', event => {
+   if (event.pointerType === 'touch') return;
+   hovered = button;
+   syncSurprise();
+  });
+  button.addEventListener('pointerleave', () => { if (hovered === button) hovered = null; syncSurprise(); });
+  button.addEventListener('focus', syncSurprise);
+  button.addEventListener('blur', () => queueMicrotask(syncSurprise));
  });
- heroSurprise.addEventListener('pointerleave', () => { hovered = false; syncSurprise(); });
- heroSurprise.addEventListener('focus', syncSurprise);
- heroSurprise.addEventListener('blur', () => queueMicrotask(syncSurprise));
  sheet.addEventListener('close', syncSurprise);
- // Dialog opening moves focus, so pause immediately rather than at the next timeout.
+ // Dialog opening moves focus; pause before its opener can disappear.
  sheet.addEventListener('focusin', syncSurprise);
  document.addEventListener('visibilitychange', syncSurprise);
  document.addEventListener('animationend', event => {
