@@ -11,6 +11,7 @@ The site is static HTML, CSS, and JavaScript. GitHub Pages publishes the root of
 - `ours/`: standalone Ours: Shared Chores website at https://ajpicard.design/ours/
 - `lander/index.html`: redirects the former GoDaddy parking path to the homepage
 - `pocket/`: Pocket's marketing site at https://ajpicard.design/pocket/, migrated from published Sites version 16 with self-contained assets
+- `quippy/`: Quippy website redesign at https://ajpicard.design/quippy/, exported from the Quippy source repository with its animations, app gallery, and conversation demo
 - `assets/aj-mark.svg`: the header’s aj✳ logo converted to vector paths
 - `assets/aj-social-preview.png`: 1200×630 shared-link thumbnail
 - `favicon-aj.svg`, `favicon-aj-32.png`, `favicon.ico`, and `apple-touch-icon.png`: browser and bookmark icons
