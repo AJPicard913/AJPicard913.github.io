@@ -560,3 +560,12 @@
  .hero-entering .orbit-surprise{opacity:1;translate:none}
 }
 .motion-off .surprise-sheet,.motion-off .prize-medallion,.motion-off .prize-confetti i,.motion-off .surprise-tile:after{animation:none!important}
+
+/* A native brand cursor stays precisely under the mouse without a trailing overlay. */
+@media (hover:hover) and (pointer:fine){
+ :root{--cursor-star:url('assets/cursor-star.svg') 16 16,auto;--cursor-star-link:url('assets/cursor-star-link.svg') 16 16,pointer}
+ body,dialog,dialog::backdrop{cursor:var(--cursor-star)}
+ html :is(a[href],button,summary,[role="button"],[role="link"],.study-card,.prize-option,input[type="radio"],input[type="checkbox"]){cursor:var(--cursor-star-link)}
+ html :is(textarea,input:not([type]),input[type="text"],input[type="email"],input[type="search"],input[type="url"],input[type="tel"],input[type="password"],input[type="number"],[contenteditable="true"]){cursor:text}
+ html :is(button:disabled,input:disabled,[aria-disabled="true"]){cursor:not-allowed}
+}
