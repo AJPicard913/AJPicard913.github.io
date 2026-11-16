@@ -1,1 +1,70 @@
-(()=>{'use strict';const samples={photo:{name:'Weekend.heic',icon:'▧',formats:['JPG','PNG','PDF']},document:{name:'Good ideas.txt',icon:'▤',formats:['PDF','RTF','HTML']},video:{name:'One good day.mov',icon:'▷',formats:['MP4','M4A','WAV']}};let current='photo',selected='JPG',timer=null;const $=id=>document.getElementById(id),go=$('demo-go'),status=$('demo-status');function reset(){clearInterval(timer);timer=null;go.disabled=false;go.innerHTML='Preview conversion <span>↗</span>';$('progress-fill').style.width='0%';status.textContent='Your original stays just as it is.'}function render(){reset();const s=samples[current];$('demo-name').textContent=s.name;$('demo-icon').textContent=s.icon;$('formats').replaceChildren(...s.formats.map(f=>{const b=document.createElement('button');b.textContent=f;b.setAttribute('aria-pressed',String(f===selected));b.addEventListener('click',()=>{selected=f;render()});return b}))}document.querySelectorAll('[data-type]').forEach(b=>b.addEventListener('click',()=>{current=b.dataset.type;selected=samples[current].formats[0];document.querySelectorAll('[data-type]').forEach(t=>t.setAttribute('aria-pressed',String(t===b)));render()}));$('compress-toggle').addEventListener('change',reset);go.addEventListener('click',()=>{reset();go.disabled=true;go.textContent='Finding a fresh form…';let progress=0;status.textContent='Previewing the conversion flow…';timer=setInterval(()=>{progress+=20;$('progress-fill').style.width=progress+'%';if(progress>=100){clearInterval(timer);timer=null;go.disabled=false;go.innerHTML='Try it again <span>↻</span>';const zipped=$('compress-toggle').checked&&['PDF','RTF','HTML','WAV'].includes(selected);status.textContent='Preview complete: '+samples[current].name.replace(/\.[^.]+$/,'')+'.'+selected.toLowerCase()+(zipped?'.zip':'')+($('compress-toggle').checked?' · compression enabled':'')+'. No file was created.'}},240)});render()})();
+(() => {
+  'use strict';
+  const samples = {
+    photo: { name: 'Weekend.heic', icon: '▧', formats: ['JPG', 'PNG', 'PDF'] },
+    document: { name: 'Good ideas.txt', icon: '▤', formats: ['PDF', 'RTF', 'HTML'] },
+    video: { name: 'One good day.mov', icon: '▷', formats: ['MP4', 'M4A', 'WAV'] }
+  };
+  let current = 'photo', selected = 'JPG', timer = null;
+  const $ = id => document.getElementById(id);
+  const go = $('demo-go'), status = $('demo-status'), result = $('demo-result');
+  function reset() {
+    clearInterval(timer);
+    timer = null;
+    go.disabled = false;
+    go.hidden = false;
+    go.innerHTML = 'Preview conversion <span>↗</span>';
+    result.hidden = true;
+    $('progress-fill').style.width = '0%';
+    status.textContent = 'Sample preview only. Your files stay untouched.';
+  }
+  function render() {
+    reset();
+    const sample = samples[current];
+    $('demo-name').textContent = sample.name;
+    $('demo-icon').textContent = sample.icon;
+    $('formats').replaceChildren(...sample.formats.map(format => {
+      const button = document.createElement('button');
+      button.textContent = format;
+      button.setAttribute('aria-pressed', String(format === selected));
+      button.addEventListener('click', () => { selected = format; render(); });
+      return button;
+    }));
+  }
+  document.querySelectorAll('[data-type]').forEach(button => {
+    button.addEventListener('click', () => {
+      current = button.dataset.type;
+      selected = samples[current].formats[0];
+      document.querySelectorAll('[data-type]').forEach(tab => tab.setAttribute('aria-pressed', String(tab === button)));
+      render();
+    });
+  });
+  $('compress-toggle').addEventListener('change', reset);
+  $('demo-reset').addEventListener('click', () => {
+    reset();
+    document.querySelector('[data-type="photo"]').focus();
+  });
+  go.addEventListener('click', () => {
+    reset();
+    go.disabled = true;
+    go.textContent = 'Previewing conversion…';
+    let progress = 0;
+    status.textContent = 'Showing how conversion works in FormaOS…';
+    timer = setInterval(() => {
+      progress += 20;
+      $('progress-fill').style.width = progress + '%';
+      if (progress < 100) return;
+      clearInterval(timer);
+      timer = null;
+      const compressed = $('compress-toggle').checked;
+      const zipped = compressed && ['PDF', 'RTF', 'HTML', 'WAV'].includes(selected);
+      const output = samples[current].name.replace(/\.[^.]+$/, '') + '.' + selected.toLowerCase() + (zipped ? '.zip' : '');
+      $('demo-output').textContent = output;
+      go.hidden = true;
+      result.hidden = false;
+      status.textContent = 'Preview complete. ' + output + '. This is a sample demonstration; no file was created.';
+      result.querySelector('a').focus({ preventScroll: true });
+    }, 240);
+  });
+  render();
+})();
