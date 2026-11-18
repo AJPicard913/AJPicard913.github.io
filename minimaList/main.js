@@ -1,21 +1,27 @@
 const secret = document.querySelector('.secret');
-const status = document.querySelector('.announcement');
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-let statusTimer;
+const prizeSheet = document.querySelector('#prize-sheet');
+const closePrize = document.querySelector('.sheet-close');
+
+// Start a fresh discovery delay on each visit, without stealing keyboard focus.
+setTimeout(() => { secret.hidden = false; }, 30_000);
 
 secret.addEventListener('click', () => {
-  status.textContent = 'You found it. Say hello to AJ in your email app.';
-  clearTimeout(statusTimer);
-  statusTimer = setTimeout(() => { status.textContent = ''; }, 7000);
-  if (reducedMotion.matches) return;
-  const bounds = secret.getBoundingClientRect();
-  for (let i = 0; i < 14; i++) {
-    const piece = document.createElement('span');
-    piece.className = 'confetti';
-    piece.setAttribute('aria-hidden', 'true');
-    piece.style.cssText = `left:${bounds.x + bounds.width / 2}px;top:${bounds.y + bounds.height / 2}px;background:${['#a7c2ad', '#d5c5a5', '#b7c7ce'][i % 3]};--x:${Math.cos(i * 2.4) * 75}px;--y:${-30 - Math.random() * 95}px;--r:${i * 47}deg`;
-    document.body.append(piece);
-    piece.addEventListener('animationend', () => piece.remove(), { once: true });
+  prizeSheet.showModal();
+  document.body.classList.add('sheet-open');
+});
+
+closePrize.addEventListener('click', () => prizeSheet.close());
+prizeSheet.addEventListener('click', (event) => {
+  if (event.target !== prizeSheet) return;
+  const bounds = prizeSheet.getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right ||
+      event.clientY < bounds.top || event.clientY > bounds.bottom) {
+    prizeSheet.close();
   }
-  // Keep the anchor's native mailto behavior; no message is sent by this page.
+});
+
+// Also handles the native Escape-key dismissal and restores focus to the gift.
+prizeSheet.addEventListener('close', () => {
+  document.body.classList.remove('sheet-open');
+  secret.focus({ preventScroll: true });
 });

@@ -27,13 +27,31 @@ a:focus-visible{outline:2px solid #6b8069;outline-offset:6px}
 .orbit-one{left:15%;top:26%}.orbit-two{right:19%;top:61%;width:10px;height:10px;animation-delay:-9s}
 .speck{position:absolute;width:4px;height:4px;border-radius:50%;background:#bfc0c5;animation:twinkle 7s ease-in-out infinite}
 .speck-one{left:24%;top:70%}.speck-two{right:12%;top:19%;animation-delay:-4s}
-.secret{position:absolute;right:clamp(18px,5vw,80px);bottom:32px;display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 15px;color:#707077;background:#fff;border:1px solid #e5e5ea;box-shadow:0 4px 16px #00000005;text-decoration:none;border-radius:22px;transition:color .3s,box-shadow .3s,transform .3s;animation:arrive 1s var(--ease) .6s both}
-.secret svg{width:19px;height:19px;flex:none}
-.gift{animation:gift-nudge 6s ease-in-out 2s infinite;transform-origin:50% 80%}
-.secret:hover,.secret:focus-visible{color:#222;box-shadow:0 6px 22px #0000000d;transform:translateY(-2px)}
-.secret-label{font-size:11px;font-weight:500;white-space:nowrap}
-.announcement{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);font-size:12px;text-align:center;max-width:70vw;color:var(--muted);margin:0;pointer-events:none}
-.confetti{position:fixed;width:5px;height:5px;pointer-events:none;border-radius:1px;animation:confetti .9s var(--ease) both}
+.secret{position:absolute;right:12%;bottom:12%;display:grid;place-items:center;width:64px;height:64px;padding:0;color:#fff;background:#222;border:1px solid #333;box-shadow:0 8px 24px #00000014;border-radius:20px;cursor:pointer;--tilt:9deg;animation:gift-arrive .7s var(--ease) both,float 9s ease-in-out .7s infinite;transition:background .3s,box-shadow .3s}
+.secret[hidden]{display:none}
+.secret svg{width:27px;height:27px}
+.gift{transform-origin:50% 80%}
+.secret:hover,.secret:focus-visible{background:#111;box-shadow:0 12px 28px #00000024}
+.secret:hover .gift,.secret:focus-visible .gift{animation:gift-nudge 1s ease-in-out}
+.secret-label{position:absolute;bottom:calc(100% + 13px);left:50%;transform:translate(-50%,5px) rotate(-9deg);padding:7px 11px;border-radius:9px;background:#222;color:#fff;font-size:11px;font-weight:500;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.secret:hover .secret-label,.secret:focus-visible .secret-label{opacity:1;transform:translate(-50%,0) rotate(-9deg)}
+body.sheet-open{overflow:hidden}
+.prize-sheet{position:fixed;inset:auto 0 20px;margin:0 auto;padding:36px 32px 28px;width:min(440px,calc(100% - 32px));max-height:calc(100svh - 40px);overflow:auto;border:1px solid #e7e7eb;border-radius:30px;background:#fff;color:var(--ink);text-align:center;box-shadow:0 24px 100px #00000020;font-family:inherit}
+.prize-sheet[open]{animation:sheet-arrive .45s var(--ease) both}
+.prize-sheet::backdrop{background:#00000028;backdrop-filter:blur(6px);animation:backdrop-arrive .3s ease both}
+.sheet-handle{position:absolute;top:10px;left:calc(50% - 16px);width:32px;height:4px;border-radius:4px;background:#d8d8dd}
+.sheet-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;border-radius:50%;background:#f3f3f5;color:#666;font-family:inherit;font-size:22px;line-height:1;cursor:pointer}
+.sheet-close:focus-visible{outline:2px solid #555;outline-offset:3px}
+.prize-icon{display:grid;place-items:center;width:62px;height:62px;margin:8px auto 25px;border-radius:19px;background:#222;color:#fff;transform:rotate(-7deg)}
+.prize-icon svg{width:28px;height:28px}
+.prize-eyebrow{font-size:10px;letter-spacing:1.6px;color:#85858b;font-weight:600;margin:0 0 10px}
+.prize-sheet h2{font-size:26px;letter-spacing:-.8px;line-height:1.15;margin:0 0 14px}
+#prize-description{font-size:14px;line-height:1.6;color:var(--muted);margin:0 auto 26px;max-width:320px}
+.prize-claim{width:100%;min-height:48px;font-size:14px;gap:9px}
+.prize-note{font-size:11px;line-height:1.5;color:#85858b;margin:14px 0 0}
+@keyframes gift-arrive{from{opacity:0;transform:translateY(16px) rotate(0)}to{opacity:1;transform:translateY(0) rotate(9deg)}}
+@keyframes sheet-arrive{from{opacity:0;transform:translateY(48px)}to{opacity:1;transform:translateY(0)}}
+@keyframes backdrop-arrive{from{opacity:0}to{opacity:1}}
 @keyframes phone-arrive{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
 @keyframes arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes breathe{50%{transform:translateY(5px)}}
@@ -41,8 +59,8 @@ a:focus-visible{outline:2px solid #6b8069;outline-offset:6px}
 @keyframes float{50%{transform:translateY(-14px) rotate(calc(var(--tilt) + 5deg))}}
 @keyframes gift-nudge{0%,75%,100%{transform:rotate(0)}80%{transform:rotate(-12deg)}86%{transform:rotate(10deg)}92%{transform:rotate(-5deg)}}
 @keyframes twinkle{50%{opacity:.35;transform:scale(.85)}}
-@keyframes confetti{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+
 @media(min-height:850px) and (min-width:700px){.phone-stage{width:420px}.intro{margin-top:34px}}
-@media(max-width:600px){.landing{padding-bottom:110px}.phone-stage{width:min(310px,80vw);margin-top:-20px}.intro{margin-top:25px}.intro p{font-size:14px}.orbit-one{left:5%;top:40%}.orbit-two{right:6%;top:68%}.secret{bottom:22px;right:18px}}
-@media(max-width:850px){.filler{width:44px;height:44px;border-radius:14px}.filler svg{width:23px;height:23px}.filler-check{left:3%;top:42%}.filler-folder{right:3%;top:55%}.filler-clock,.filler-list{display:none}.announcement{bottom:78px;max-width:90vw}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.confetti{display:none}}
+@media(max-width:600px){.landing{padding-bottom:110px}.phone-stage{width:min(310px,80vw);margin-top:-20px}.intro{margin-top:25px}.intro p{font-size:14px}.orbit-one{left:5%;top:40%}.orbit-two{right:6%;top:68%}.secret{bottom:26px;right:26px;width:48px;height:48px;border-radius:15px}.prize-sheet{bottom:0;width:100%;max-height:90svh;border-radius:28px 28px 0 0;padding-bottom:calc(28px + env(safe-area-inset-bottom))}}
+@media(max-width:850px){.filler{width:44px;height:44px;border-radius:14px}.filler svg{width:23px;height:23px}.filler-check{left:3%;top:42%}.filler-folder{right:3%;top:55%}.filler-clock,.filler-list{display:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
